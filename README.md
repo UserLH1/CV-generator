@@ -16,7 +16,7 @@ This is a web application for generating CVs, built with **React**, **Vite**, an
 Clone the GitHub repository:
 
 ```bash
-git clone https://github.com/your-username/cv-generator.git
+git clone https://github.com/UserLH1/CV-generator.git
 cd cv-generator
 ```
 
