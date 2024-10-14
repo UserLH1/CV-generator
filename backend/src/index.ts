@@ -1,37 +1,26 @@
-import cors from 'cors';
-import dotenv from 'dotenv';
-import express from 'express';
+import 'reflect-metadata';
+import { createConnection } from 'typeorm';
+import app from './app';
+import { config } from 'dotenv';
 
-dotenv.config();
+config(); // Load environment variables from .env file
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-// // Configurare conexiune la baza de date
-// const pool = new Pool({
-//   connectionString: process.env.DATABASE_URL,
-//   ssl: {
-//     rejectUnauthorized: false,
-//   },
-// });
-
-// Testare conexiune
-// pool.connect((err) => {
-//   if (err) {
-//     console.error('Eroare la conectarea la baza de date:', err.stack);
-//   } else {
-//     console.log('Conectat la baza de date PostgreSQL!');
-//   }
-// });
-
-// Endpoint de test
-app.get('/', (req, res) => {
-  res.send('Backend-ul funcționează!');
-});
-
-// Pornire server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Serverul rulează pe portul ${PORT}`);
-});
+createConnection({
+  type: 'postgres',
+  url: process.env.DATABASE_URL,  // Connection string from your .env
+  synchronize: true,              // Set to false in production
+  logging: true,
+  entities: ['src/entities/*.ts'], // Path to your entities
+  ssl: {                          // Enable SSL (usually required for Neon)
+    rejectUnauthorized: false
+  }
+})
+  .then(() => {
+    console.log('Connected to the database');
+    
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((error) => console.log('Database connection error:', error));
