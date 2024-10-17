@@ -1,0 +1,21 @@
+import { Router } from 'express';
+import { AuthController } from '../controllers/AuthController';
+
+const router = Router();
+const authController = new AuthController();
+
+import { Request, Response } from 'express';
+
+router.post('/register', async (req: Request, res: Response) => {
+	try {
+		await authController.register(req, res);
+	} catch (error) {
+		if (error instanceof Error) {
+			res.status(500).send(error.message);
+		} else {
+			res.status(500).send('An unknown error occurred');
+		}
+	}
+});
+
+export default router;

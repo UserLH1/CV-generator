@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import 'reflect-metadata';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class CV {
@@ -17,4 +17,12 @@ export class CV {
 
   @Column('text')
   experience: string;
+
+  constructor() {
+    this.id = 0; 
+    this.name = '';
+    this.email = '';
+    this.education = '';
+    this.experience = '';
+  }
 }
