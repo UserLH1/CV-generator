@@ -1,11 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,6 +13,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -30,7 +30,7 @@ const formSchema = z.object({
   password: z.string().min(8, {
     message: "Password must be at least 8 characters.",
   }),
-  terms: z.boolean().refine((val) => val === true, {
+  terms: z.boolean().refine((val) => val === true || val == false, {
     message: "You must agree to the terms and conditions.",
   }),
 });
@@ -48,18 +48,46 @@ export function RegisterFormComponent() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/register",
+        {
+          name: values.name,
+          email: values.email,
+          password: values.password,
+        }
+      );
+
+      if (response.status === 201) {
+        toast({
+          title: "Registration Successful",
+          description: "You have successfully registered an account.",
+        });
+        form.reset(); // Reset form on success
+      }
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        // If error has a response and a message, it's an Axios error
+        toast({
+          title: "Error",
+          description: error.response.data.message || "Registration failed.",
+        });
+      } else {
+        // Generic error handling for unknown error types
+        toast({
+          title: "Error",
+          description: "An unknown error occurred.",
+        });
+      }
+    } finally {
       setIsLoading(false);
-      console.log(values);
-      toast({
-        title: "Registration Successful",
-        description: "You have successfully registered an account.",
-      });
-      form.reset();
-    }, 2000);
+    }
   }
 
   return (
