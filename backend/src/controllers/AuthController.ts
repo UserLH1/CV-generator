@@ -1,9 +1,12 @@
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 import { getRepository } from 'typeorm';
 import { User } from '../entities/User';
 
 export class AuthController {
+
+  //register a new user
   async register(req: Request, res: Response): Promise<Response> {
     const { email, password, name } = req.body;
 
@@ -33,4 +36,40 @@ export class AuthController {
       return res.status(500).json({ message: 'Server error' });
     }
   }
+
+
+  //login a user
+   async login(req: Request, res: Response): Promise<Response> {
+    const { email, password } = req.body;
+
+    const userRepository = getRepository(User);
+
+    try {
+      // Check if the user exists
+      const user = await userRepository.findOne({ where: { email } });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Compare the provided password with the stored hash
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return res.status(400).json({ message: 'Invalid credentials' });
+      }
+
+      // Generate a JWT token
+      const token = jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_SECRET || 'your_jwt_secret',  // Use an environment variable for secret in production
+        { expiresIn: '1h' }
+      );
+
+      return res.status(200).json({ message: 'Login successful', token });
+    } catch (error) {
+      console.error('Error during login:', error);
+      return res.status(500).json({ message: 'Server error' });
+    }
+  }
 }
+
+
