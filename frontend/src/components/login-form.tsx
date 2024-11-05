@@ -71,8 +71,8 @@ export function LoginForm() {
       console.log("token", localStorage.getItem("token"));
       // Redirect to the dashboard after successful login
       navigate("/dashboard");
-    } catch (error: any) {
-      if (error.response && error.response.data) {
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response && error.response.data) {
         toast({
           title: "Login Failed",
           description: error.response.data.message || "Invalid credentials",
