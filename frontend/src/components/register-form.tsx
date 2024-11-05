@@ -30,7 +30,7 @@ const formSchema = z.object({
   password: z.string().min(8, {
     message: "Password must be at least 8 characters.",
   }),
-  terms: z.boolean().refine((val) => val === true || val == false, {
+  terms: z.boolean().refine((val) => val === true, {
     message: "You must agree to the terms and conditions.",
   }),
 });
@@ -52,7 +52,7 @@ export function RegisterFormComponent() {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        `${import.meta.env.VITE_API_URL}/api/auth/register`, // Use VITE_API_URL here
         {
           name: values.name,
           email: values.email,

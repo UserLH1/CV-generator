@@ -1,15 +1,14 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import axios from 'axios';
-import { Loader2 } from 'lucide-react';
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
+import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -18,6 +17,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
@@ -31,6 +32,7 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate(); // Initialize navigate
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -40,34 +42,36 @@ export function LoginForm() {
     },
   });
 
-  // Modified onSubmit to use Axios for API call
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
 
     try {
-      // Define the expected response type
       interface LoginResponse {
         token: string;
       }
 
-      // POST request to login API
-      const response = await axios.post<LoginResponse>('http://localhost:5000/api/auth/login', {
-        email: values.email,
-        password: values.password,
-      });
+      const response = await axios.post<LoginResponse>(
+        `${import.meta.env.VITE_API_URL}/api/auth/login`, // Corrected API URL
+        {
+          email: values.email,
+          password: values.password,
+        }
+      );
 
-      // Handle success: Save the token and show success message
       const token: string = response.data.token;
-      localStorage.setItem('token', token);  // Store token in localStorage or context
-      console.log('Token:', token);
+      localStorage.setItem("token", token); // Store token in localStorage or context
+      console.log("Token:", token);
       toast({
         title: "Login Successful",
         description: "You have successfully logged in.",
       });
 
-      form.reset(); // Reset the form
+      form.reset();
+      console.log("Navigating to dashboard...");
+      console.log("token", localStorage.getItem("token"));
+      // Redirect to the dashboard after successful login
+      navigate("/dashboard");
     } catch (error: any) {
-      // Handle error
       if (error.response && error.response.data) {
         toast({
           title: "Login Failed",
@@ -90,7 +94,9 @@ export function LoginForm() {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
-        <CardDescription>Enter your credentials to access your account</CardDescription>
+        <CardDescription>
+          Enter your credentials to access your account
+        </CardDescription>
       </CardHeader>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <CardContent className="space-y-4">
@@ -103,7 +109,9 @@ export function LoginForm() {
               {...form.register("email")}
             />
             {form.formState.errors.email && (
-              <p className="text-sm text-red-500">{form.formState.errors.email.message}</p>
+              <p className="text-sm text-red-500">
+                {form.formState.errors.email.message}
+              </p>
             )}
           </div>
           <div className="space-y-2">
@@ -114,7 +122,9 @@ export function LoginForm() {
               {...form.register("password")}
             />
             {form.formState.errors.password && (
-              <p className="text-sm text-red-500">{form.formState.errors.password.message}</p>
+              <p className="text-sm text-red-500">
+                {form.formState.errors.password.message}
+              </p>
             )}
           </div>
         </CardContent>

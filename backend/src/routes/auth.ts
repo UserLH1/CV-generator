@@ -7,6 +7,8 @@ const authController = new AuthController();
 import { Request, Response } from 'express';
 
 router.post('/register', async (req: Request, res: Response) => {
+	  console.log('Register route hit');
+
 	try {
 		await authController.register(req, res);
 	} catch (error) {

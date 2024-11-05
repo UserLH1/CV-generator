@@ -1,24 +1,30 @@
+import React from "react";
 import { Outlet } from "react-router-dom";
-import "./App.css";
+import { useAuth } from "./auth/AuthContext";
+import UserPanel from "./hooks/user-panel";
 
-function App() {
-  // const { user, isLoaded, isSignedIn } = {
-  //   user: false,
-  //   isLoaded: true,
-  //   isSignedIn: false,
-  // };
-  // console.log({ user, isLoaded, isSignedIn });
-
-  // if (!isSignedIn && isLoaded) {
-  //   console.log("User is not signed in");
-  //   return <Navigate to="/register" />;
-  // }
+const App: React.FC = () => {
+  const { user, logout } = useAuth();
 
   return (
-    <>
-      <Outlet />
-    </>
+    <div>
+      <header className="header">
+        <h1>My Application</h1>
+        {user ? (
+          <UserPanel
+            username={user}
+            avatarUrl="" // Optionally provide an avatar URL if available
+            onLogout={logout} // Pass the logout function to UserPanel
+          />
+        ) : (
+          <div>Please log in</div>
+        )}
+      </header>
+      <main>
+        <Outlet />
+      </main>
+    </div>
   );
-}
+};
 
 export default App;

@@ -1,35 +1,38 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import App from "./App.tsx";
-import LoginPage from "./auth/login.tsx";
-import RegisterPage from "./auth/register.tsx";
+import App from "./App";
+import { AuthProvider } from "./auth/AuthContext"; // Import AuthProvider
+import LoginPage from "./auth/login";
+import RegisterPage from "./auth/register";
+import ProtectedRoute from "./components/ProtectedRoute";
 import "./index.css";
-import Dashboard from "./pages/Dashboard.tsx";
-import ErrorBoundary from "./pages/ErrorBoundary.tsx";
-import Home from "./pages/Home.tsx";
+import Dashboard from "./pages/Dashboard";
+import ErrorBoundary from "./pages/ErrorBoundary";
+import Home from "./pages/Home";
 const router = createBrowserRouter([
   {
-    element: <App />,
+    element: (
+      <AuthProvider>
+        {" "}
+        {/* Wrap AuthProvider here */}
+        <App />
+      </AuthProvider>
+    ),
     children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
+      { path: "/", element: <Home /> },
       {
         path: "/dashboard",
-        element: <Dashboard />,
+        element: (
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
-  {
-    path: "/register",
-    element: <RegisterPage />,
-  },
-  {
-    path: "/login",
-    element: <LoginPage />,
-  },
+  { path: "/register", element: <RegisterPage /> },
+  { path: "/login", element: <LoginPage /> },
 ]);
 
 createRoot(document.getElementById("root")!).render(
