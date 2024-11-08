@@ -14,8 +14,6 @@ const router = createBrowserRouter([
   {
     element: (
       <AuthProvider>
-        {" "}
-        {/* Wrap AuthProvider here */}
         <App />
       </AuthProvider>
     ),

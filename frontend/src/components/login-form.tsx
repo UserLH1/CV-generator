@@ -60,6 +60,7 @@ export function LoginForm() {
 
       const token: string = response.data.token;
       localStorage.setItem("token", token); // Store token in localStorage or context
+      localStorage.setItem("user", values.email); // Store user in localStorage or context
       console.log("Token:", token);
       toast({
         title: "Login Successful",
