@@ -10,6 +10,8 @@ import "./index.css";
 import Dashboard from "./pages/Dashboard";
 import ErrorBoundary from "./pages/ErrorBoundary";
 import Home from "./pages/Home";
+import EditResume from "../src/components/resume/[resumeId]/EditResume";
+
 const router = createBrowserRouter([
   {
     element: (
@@ -24,6 +26,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/dashboard/resume/:resumeId/edit",
+        element: (
+          <ProtectedRoute>
+            <EditResume />
           </ProtectedRoute>
         ),
       },

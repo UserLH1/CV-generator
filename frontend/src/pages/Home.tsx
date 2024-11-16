@@ -16,7 +16,7 @@ const Home = () => {
           <span>☰</span>
           {isMenuOpen && (
             <div className="menu-dropdown">
-              <a href="/auth">Login</a>
+              <a href="/login">Login</a>
               <a href="/create-cv">Create CV</a>
               <a href="/edit-profile">Edit Profile</a>
               <a href="/history">History</a>

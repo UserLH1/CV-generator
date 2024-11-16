@@ -9,7 +9,7 @@ const App: React.FC = () => {
   return (
     <div>
       <header className="header">
-        <h1>My Application</h1>
+        
         {user ? (
           <UserPanel
             username={user}
