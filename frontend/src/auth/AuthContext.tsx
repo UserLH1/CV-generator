@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
@@ -13,25 +13,15 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<string | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  // Initialize state directly from localStorage
+  const [user, setUser] = useState<string | null>(localStorage.getItem("user"));
+  const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
   const navigate = useNavigate();
-
-  // Check localStorage for token and user on initial load
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(storedUser);
-    }
-  }, []);
 
   const login = (newToken: string, newUser: string) => {
     localStorage.setItem("token", newToken);
     localStorage.setItem("user", newUser);
-    setToken(newToken); // Update the context state with new values
+    setToken(newToken); 
     setUser(newUser);
   };
 

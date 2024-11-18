@@ -60,6 +60,7 @@ export function LoginForm() {
 
       const token: string = response.data.token;
       localStorage.setItem("token", token); // Store token in localStorage or context
+      localStorage.setItem("user", values.email); // Store user in localStorage or context
       console.log("Token:", token);
       toast({
         title: "Login Successful",
@@ -91,53 +92,64 @@ export function LoginForm() {
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle>Login to your account</CardTitle>
-        <CardDescription>
-          Enter your credentials to access your account
-        </CardDescription>
-      </CardHeader>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="john@example.com"
-              {...form.register("email")}
-            />
-            {form.formState.errors.email && (
-              <p className="text-sm text-red-500">
-                {form.formState.errors.email.message}
-              </p>
-            )}
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              {...form.register("password")}
-            />
-            {form.formState.errors.password && (
-              <p className="text-sm text-red-500">
-                {form.formState.errors.password.message}
-              </p>
-            )}
-          </div>
-        </CardContent>
-        <CardFooter className="flex flex-col space-y-4">
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Login
-          </Button>
-          <Button variant="link" className="text-sm">
-            Forgot password?
-          </Button>
-        </CardFooter>
-      </form>
-    </Card>
+    <div className="h-screen flex items-center justify-center bg-gray-100">
+      <Card className="w-full max-w-md shadow-lg border border-gray-300 rounded-lg bg-white p-6">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold text-gray-800">Login to your account</CardTitle>
+          <CardDescription className="text-gray-600">
+            Enter your credentials to access your account
+          </CardDescription>
+        </CardHeader>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-gray-700">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="john@example.com"
+                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                {...form.register("email")}
+              />
+              {form.formState.errors.email && (
+                <p className="text-sm text-red-500">
+                  {form.formState.errors.email.message}
+                </p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-gray-700">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                {...form.register("password")}
+              />
+              {form.formState.errors.password && (
+                <p className="text-sm text-red-500">
+                  {form.formState.errors.password.message}
+                </p>
+              )}
+            </div>
+          </CardContent>
+          <CardFooter className="flex flex-col space-y-4">
+            <p className="text-sm text-gray-600">
+              <a href="link" className="text-blue-500 hover:underline">Forgot password?</a>
+            </p>
+            <Button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg" disabled={isLoading}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Login
+            </Button>
+            <p className="text-sm text-gray-600 text-center">
+              Don't have an account?{" "}
+              <a href="/register" className="text-blue-500 hover:underline">Create an account</a>
+            </p>
+          </CardFooter>
+        </form>
+      </Card>
+    </div>
   );
+  
+  
+  
 }

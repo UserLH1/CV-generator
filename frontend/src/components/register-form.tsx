@@ -156,6 +156,7 @@ export function RegisterFormComponent() {
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Register
           </Button>
+          <p>Already have an account?<a href="login">Log-in</a></p>
         </CardFooter>
       </form>
     </Card>
