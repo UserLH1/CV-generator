@@ -9,13 +9,14 @@ import {
 import axios from "axios";
 import { Loader2, PlusSquare } from "lucide-react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 const AddResume = () => {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [resumeTitle, setResumeTitle] = React.useState("");
   const [loading, setLoading] = React.useState(false);
-
+  const navigation = useNavigate();
   const onCreate = () => {
     console.log(resumeTitle, localStorage.getItem("email"));
     setLoading(true);
@@ -25,7 +26,8 @@ const AddResume = () => {
         email: localStorage.getItem("user"),
       })
       .then((response) => {
-        console.log(response);
+        console.log("response from creation", response);
+        navigation(`/dashboard/resume/${response.data.id}/edit`);
         setLoading(false);
       })
       .catch((error) => {

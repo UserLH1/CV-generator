@@ -1,22 +1,22 @@
-import { Router, Request, Response } from 'express';
-import { CVController } from '../controllers/CVController';
+import { Request, Response, Router } from "express";
+import { CVController } from "../controllers/CVController";
 
 const router = Router();
 const cvController = new CVController();
 
-router.post('/createCV', async (req: Request, res: Response) => {
+router.post("/createCV", async (req: Request, res: Response) => {
   try {
     await cvController.createCV(req, res);
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred' });
+    res.status(500).json({ error: "An error occurred" });
   }
 });
 
-router.get('/getCV', async (req: Request, res: Response) => {
+router.get("/getCVs", async (req: Request, res: Response) => {
   try {
-    await cvController.getCV(req, res);
+    await cvController.getCVsByUser(req, res);
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred' });
+    res.status(500).json({ error: "An error occurred" });
   }
 });
 

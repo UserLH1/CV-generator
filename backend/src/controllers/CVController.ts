@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
-import { CV } from '../entities/CV';
+import { Request, Response } from "express";
+import { getRepository } from "typeorm";
+import { CV } from "../entities/CV";
 
 export class CVController {
   async createCV(req: Request, res: Response) {
@@ -10,9 +10,19 @@ export class CVController {
     return res.json(newCV);
   }
 
-  async getCV(req: Request, res: Response) {
+  async getCVsByUser(req: Request, res: Response): Promise<Response> {
+    const { email } = req.query;
     const cvRepository = getRepository(CV);
-    const cvs = await cvRepository.find();
-    return res.json(cvs);
+
+    try {
+      const emailStr = Array.isArray(email) ? email[0] : email;
+      const cvs = await cvRepository.find({
+        where: { email: emailStr as string },
+      });
+      return res.status(200).json(cvs);
+    } catch (error) {
+      console.error("Error fetching CVs:", error);
+      return res.status(500).json({ message: "Server error" });
+    }
   }
 }
