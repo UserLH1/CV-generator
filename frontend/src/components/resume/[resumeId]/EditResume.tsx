@@ -6,7 +6,7 @@ const params = useParams();
 
 useEffect(() => {
     console.log(params.resumeId);
-},[])   
+})   
 
   return (
     <div>EditResume</div>
