@@ -3,26 +3,17 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class CV {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id?: string;
 
   @Column()
-  name: string;
+  title: string; 
 
   @Column()
   email: string;
 
-  @Column('text')
-  education: string;
-
-  @Column('text')
-  experience: string;
-
   constructor() {
-    this.id = 0; 
-    this.name = '';
+    this.title = '';
     this.email = '';
-    this.education = '';
-    this.experience = '';
   }
 }

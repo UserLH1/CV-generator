@@ -4,7 +4,7 @@ import { CVController } from '../controllers/CVController';
 const router = Router();
 const cvController = new CVController();
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/createCV', async (req: Request, res: Response) => {
   try {
     await cvController.createCV(req, res);
   } catch (error) {
@@ -12,7 +12,7 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/', async (req: Request, res: Response) => {
+router.get('/getCV', async (req: Request, res: Response) => {
   try {
     await cvController.getCV(req, res);
   } catch (error) {

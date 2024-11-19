@@ -15,13 +15,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   // Initialize state directly from localStorage
   const [user, setUser] = useState<string | null>(localStorage.getItem("user"));
-  const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  );
   const navigate = useNavigate();
+
+  // Remove the useEffect since we are initializing state directly
 
   const login = (newToken: string, newUser: string) => {
     localStorage.setItem("token", newToken);
     localStorage.setItem("user", newUser);
-    setToken(newToken); 
+    setToken(newToken);
     setUser(newUser);
   };
 
