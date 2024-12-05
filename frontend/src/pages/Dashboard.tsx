@@ -27,7 +27,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="p-6 md:p-10 lg:p-16 bg-gray-50 min-h-screen">
+    <div className="p-6 md:p-10 lg:p-16 bg-gray-50 min-h-screen mt-28">
       <header className="mb-8">
         <h2 className="text-4xl font-bold text-gray-800">Dashboard</h2>
         <p className="text-lg text-gray-600 mt-2">

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import '../components/ui/Home.css'; 
+import { useState } from "react";
+import "../components/ui/Home.css";
 
 const Home = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,15 +11,15 @@ const Home = () => {
   return (
     <div className="home">
       <header className="navbar">
-        <div className="logo">l o g ooooo</div>
+        <div className="logo">Smart CV Maker</div>
         <div className="burger-menu" onClick={toggleMenu}>
           <span>☰</span>
           {isMenuOpen && (
             <div className="menu-dropdown">
               <a href="/login">Login</a>
-              <a href="/create-cv">Create CV</a>
-              <a href="/edit-profile">Edit Profile</a>
-              <a href="/history">History</a>
+              <a href="/dashboard">Create CV</a>
+              <a href="/dashboard">Edit Profile</a>
+              <a href="/dashboard">History</a>
             </div>
           )}
         </div>
@@ -28,10 +28,15 @@ const Home = () => {
       <section className="hero-section">
         <div className="hero-content">
           <h1>Create Your CV Quickly and Easily</h1>
-          <p>Stand out in the job market with professional resumes crafted effortlessly.</p>
-          <button onClick={() => window.location.href = '/dashboard'}>Get Started</button>
+          <p>
+            Stand out in the job market with professional resumes crafted
+            effortlessly.
+          </p>
+          <button onClick={() => (window.location.href = "/dashboard")}>
+            Get Started
+          </button>
         </div>
-        <div className="hero-image">
+        <div className="hero-image mt-24">
           <img src="/example-cv.jpg" alt="Example CV" />
         </div>
       </section>

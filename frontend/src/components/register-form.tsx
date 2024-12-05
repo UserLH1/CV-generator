@@ -18,8 +18,8 @@ import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import * as z from "zod";
-
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
@@ -47,7 +47,7 @@ export function RegisterFormComponent() {
       terms: false,
     },
   });
-
+  const navigate = useNavigate();
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
@@ -61,11 +61,13 @@ export function RegisterFormComponent() {
       );
 
       if (response.status === 201) {
+        alert("Registration Successful");
         toast({
           title: "Registration Successful",
           description: "You have successfully registered an account.",
         });
         form.reset(); // Reset form on success
+        navigate("/login");
       }
     } catch (error: any) {
       if (
@@ -156,7 +158,9 @@ export function RegisterFormComponent() {
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Register
           </Button>
-          <p>Already have an account?<a href="login">Log-in</a></p>
+          <p>
+            Already have an account?<a href="login">Log-in</a>
+          </p>
         </CardFooter>
       </form>
     </Card>
