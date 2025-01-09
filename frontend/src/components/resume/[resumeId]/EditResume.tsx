@@ -1,30 +1,58 @@
-// EditResume.tsx
-import axios from "axios";
+// frontend/src/components/resume/[resumeId]/EditResume.tsx
+
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 import FormSection from "../FormSection";
 import PreviewSection from "../PreviewSection";
+import { ResumeInfoContext } from "@/context/ResumeInfoContext";
+import dummy from "@/data/dummy";
 
-interface FormData {
-  personalDetails: string;
-  summary: string;
-  experience: string;
-  education: string;
+interface ResumeInfo {
+  firstName: string;
+  lastName: string;
+  jobTitle: string;
+  address: string;
+  phone: string;
+  email: string;
+  themeColor: string;
+  summery: string;
+  experience: Array<{
+    id: number;
+    title: string;
+    companyName: string;
+    city: string;
+    state: string;
+    startDate: string;
+    endDate: string;
+    currentlyWorking: boolean;
+    workSummery: string;
+  }>;
+  education: Array<{
+    id: number;
+    universityName: string;
+    startDate: string;
+    endDate: string;
+    degree: string;
+    major: string;
+    description: string;
+  }>;
+  skills: Array<{
+    id: number;
+    name: string;
+    rating: number;
+  }>;
 }
 
 const EditResume: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
+  const { resumeId } = useParams<{ resumeId: string }>();
+  const [formData, setFormData] = useState({
     personalDetails: "",
     summary: "",
     experience: "",
     education: "",
   });
-
-  const { resumeId } = useParams<{ resumeId: string }>();
-
-  const handleFormChange = (updatedFormData: FormData) => {
-    setFormData(updatedFormData);
-  };
+  const [resumeInfo, setResumeInfo] = useState<ResumeInfo>(dummy);
 
   useEffect(() => {
     // Fetch data for the resume
@@ -32,6 +60,7 @@ const EditResume: React.FC = () => {
       .get(`${import.meta.env.VITE_API_URL}/api/cv/${resumeId}`)
       .then((response) => {
         setFormData(response.data);
+        setResumeInfo(response.data.resumeInfo); // Adjust based on your API response
       })
       .catch((error) => {
         console.error(error);
@@ -50,22 +79,14 @@ const EditResume: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-6">
-      <div className="md:w-1/2">
-        <FormSection formData={formData} onFormChange={handleFormChange} />
+    <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 p-10">
+        <FormSection />
+        <PreviewSection />
+        <button onClick={handleSaveResume}>Save Resume</button>{" "}
+        {/* Example Save Button */}
       </div>
-      <div className="md:w-1/2">
-        <PreviewSection formData={formData} />
-      </div>
-      <div className="mt-4">
-        <button
-          onClick={handleSaveResume}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Save Resume
-        </button>
-      </div>
-    </div>
+    </ResumeInfoContext.Provider>
   );
 };
 

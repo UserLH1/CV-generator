@@ -1,52 +1,20 @@
-// PreviewSection.tsx
-import React from "react";
+import { useContext } from "react";
+import { ResumeInfoContext } from "../../context/ResumeInfoContext";
+import PersonalDetailPreview from "./Preview/PersonalDetailPreview";
 
-interface FormData {
-  personalDetails: string;
-  summary: string;
-  experience: string;
-  education: string;
-}
-
-interface PreviewSectionProps {
-  formData: FormData;
-}
-
-const PreviewSection: React.FC<PreviewSectionProps> = ({ formData }) => {
+const PreviewSection = () => {
+  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)!;
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Preview</h2>
-      <div className="space-y-8">
-        {/* Personal Details */}
-        <div>
-          <h3 className="text-xl font-semibold mb-2">Personal Details</h3>
-          <p className="text-gray-700">{formData.personalDetails}</p>
-        </div>
-
-        {/* Summary */}
-        <div>
-          <h3 className="text-xl font-semibold mb-2">Summary</h3>
-          <p className="text-gray-700 whitespace-pre-wrap">
-            {formData.summary}
-          </p>
-        </div>
-
-        {/* Experience */}
-        <div>
-          <h3 className="text-xl font-semibold mb-2">Experience</h3>
-          <p className="text-gray-700 whitespace-pre-wrap">
-            {formData.experience}
-          </p>
-        </div>
-
-        {/* Education */}
-        <div>
-          <h3 className="text-xl font-semibold mb-2">Education</h3>
-          <p className="text-gray-700 whitespace-pre-wrap">
-            {formData.education}
-          </p>
-        </div>
-      </div>
+    <div
+      className="shadow-lg p-14 h-full border-t-[20px]"
+      style={{ borderColor: resumeInfo?.themeColor }}
+    >
+      {/* Personal Details */}
+      <PersonalDetailPreview resumeInfo={resumeInfo} />
+      {/* Summary */}
+      {/* Proffesional Exprerience */}
+      {/* Education */}
+      {/* Skills */}
     </div>
   );
 };
