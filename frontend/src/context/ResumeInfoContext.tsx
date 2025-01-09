@@ -11,7 +11,7 @@ interface ResumeInfo {
   phone: string;
   email: string;
   themeColor: string;
-  summery: string;
+  summary: string;
   experience: Array<{
     id: number;
     title: string;
@@ -21,7 +21,7 @@ interface ResumeInfo {
     startDate: string;
     endDate: string;
     currentlyWorking: boolean;
-    workSummery: string;
+    workSummary: string;
   }>;
   education: Array<{
     id: number;

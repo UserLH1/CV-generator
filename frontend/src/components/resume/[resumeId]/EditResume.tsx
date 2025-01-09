@@ -1,12 +1,12 @@
 // frontend/src/components/resume/[resumeId]/EditResume.tsx
 
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
-import FormSection from "../FormSection";
-import PreviewSection from "../PreviewSection";
 import { ResumeInfoContext } from "@/context/ResumeInfoContext";
 import dummy from "@/data/dummy";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import FormSection from "../FormSection";
+import PreviewSection from "../PreviewSection";
 
 interface ResumeInfo {
   firstName: string;
@@ -16,7 +16,7 @@ interface ResumeInfo {
   phone: string;
   email: string;
   themeColor: string;
-  summery: string;
+  summary: string;
   experience: Array<{
     id: number;
     title: string;
@@ -26,7 +26,7 @@ interface ResumeInfo {
     startDate: string;
     endDate: string;
     currentlyWorking: boolean;
-    workSummery: string;
+    workSummary: string;
   }>;
   education: Array<{
     id: number;

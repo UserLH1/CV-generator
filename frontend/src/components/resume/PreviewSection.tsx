@@ -1,6 +1,10 @@
 import { useContext } from "react";
 import { ResumeInfoContext } from "../../context/ResumeInfoContext";
+import EducationalPreview from "./Preview/EducationalPreview";
+import ExperiencePreview from "./Preview/ExperiencePreview";
 import PersonalDetailPreview from "./Preview/PersonalDetailPreview";
+import SkillPreview from "./Preview/SkillPreview";
+import SummaryPreview from "./Preview/SummaryPreview";
 
 const PreviewSection = () => {
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)!;
@@ -12,9 +16,13 @@ const PreviewSection = () => {
       {/* Personal Details */}
       <PersonalDetailPreview resumeInfo={resumeInfo} />
       {/* Summary */}
+      <SummaryPreview resumeInfo={resumeInfo} />
       {/* Proffesional Exprerience */}
+      <ExperiencePreview resumeInfo={resumeInfo} />
       {/* Education */}
+      <EducationalPreview resumeInfo={resumeInfo} />
       {/* Skills */}
+      <SkillPreview resumeInfo={resumeInfo} />
     </div>
   );
 };
