@@ -6,11 +6,12 @@ import App from "./App";
 import { AuthProvider } from "./auth/AuthContext"; // Import AuthProvider
 import LoginPage from "./auth/login";
 import RegisterPage from "./auth/register";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./routes/ProtectedRoute";
 import "./index.css";
 import Dashboard from "./pages/Dashboard";
 import ErrorBoundary from "./pages/ErrorBoundary";
 import Home from "./pages/Home";
+import PublicRoute from "./routes/PublicRoute";
 
 const router = createBrowserRouter([
   {
@@ -37,10 +38,25 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      { 
+        path: "/register", 
+        element: (
+          <PublicRoute>
+            <RegisterPage />
+          </PublicRoute>
+        ) 
+      },
+      { 
+        path: "/login", 
+        element: (
+          <PublicRoute>
+            <LoginPage />
+          </PublicRoute>
+        ) 
+      },
     ],
   },
-  { path: "/register", element: <RegisterPage /> },
-  { path: "/login", element: <LoginPage /> },
+     
 ]);
 
 createRoot(document.getElementById("root")!).render(
