@@ -30,6 +30,12 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ enableNext }) => {
     });
   }, []);
 
+  useEffect(() => {
+    if (resumeInfo.firstName && resumeInfo.lastName && resumeInfo.jobTitle) {
+      enableNext(true);
+    }
+  }, [resumeInfo, enableNext]);
+
   const GenerateSummaryFromAI = async () => {
     setLoading(true);
     const PROMPT = prompt.replace("{jobTitle}", resumeInfo?.jobTitle);
@@ -78,7 +84,7 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ enableNext }) => {
             </Button>
           </div>
           <Textarea
-            className="border-gray-400 rounded mt-5"
+            className="border-gray-300 rounded mt-5"
             required
             onChange={handleChange}
           />

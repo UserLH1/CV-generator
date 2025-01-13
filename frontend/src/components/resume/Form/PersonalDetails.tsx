@@ -119,13 +119,15 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
             />
           </div>
         </div>
-        <Button
-          className="flex justify-end text-white border rounded mt-3"
-          type="submit"
-          disabled={loading}
-        >
-          {loading ? <LoaderCircle className="animate-spin" /> : "Save"}
-        </Button>
+        <div className="flex justify-end">
+          <Button
+            className="flex justify-end text-white border rounded mt-3"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? <LoaderCircle className="animate-spin" /> : "Save"}
+          </Button>
+        </div>
       </form>
     </div>
   );
