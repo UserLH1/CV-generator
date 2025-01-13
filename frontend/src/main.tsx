@@ -6,11 +6,11 @@ import App from "./App";
 import { AuthProvider } from "./auth/AuthContext"; // Import AuthProvider
 import LoginPage from "./auth/login";
 import RegisterPage from "./auth/register";
-import ProtectedRoute from "./routes/ProtectedRoute";
 import "./index.css";
 import Dashboard from "./pages/Dashboard";
 import ErrorBoundary from "./pages/ErrorBoundary";
 import Home from "./pages/Home";
+import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
 
 const router = createBrowserRouter([
@@ -38,28 +38,28 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      { 
-        path: "/register", 
-        element: (
-          <PublicRoute>
-            <RegisterPage />
-          </PublicRoute>
-        ) 
-      },
-      { 
-        path: "/login", 
+      {
+        path: "/login",
         element: (
           <PublicRoute>
             <LoginPage />
           </PublicRoute>
-        ) 
+        ),
+      },
+      {
+        path: "/register",
+        element: (
+          <PublicRoute>
+            <RegisterPage />
+          </PublicRoute>
+        ),
       },
     ],
   },
-     
 ]);
 
-createRoot(document.getElementById("root")!).render(
+const root = createRoot(document.getElementById("root")!);
+root.render(
   <StrictMode>
     <ErrorBoundary>
       <RouterProvider router={router} />

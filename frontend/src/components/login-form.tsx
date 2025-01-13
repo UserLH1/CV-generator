@@ -68,7 +68,9 @@ export function LoginForm() {
       });
 
       form.reset();
+      console.log("Successfully logged in!");
       console.log("Navigating to dashboard...");
+      window.location.reload();
       console.log("token", localStorage.getItem("token"));
       // Redirect to the dashboard after successful login
       navigate("/dashboard");
@@ -95,7 +97,9 @@ export function LoginForm() {
     <div className="h-screen flex items-center justify-center bg-gray-100">
       <Card className="w-full max-w-md shadow-lg border border-gray-300 rounded-lg bg-white p-6">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold text-gray-800">Login to your account</CardTitle>
+          <CardTitle className="text-2xl font-bold text-gray-800">
+            Login to your account
+          </CardTitle>
           <CardDescription className="text-gray-600">
             Enter your credentials to access your account
           </CardDescription>
@@ -103,7 +107,9 @@ export function LoginForm() {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-700">Email</Label>
+              <Label htmlFor="email" className="text-gray-700">
+                Email
+              </Label>
               <Input
                 id="email"
                 type="email"
@@ -118,7 +124,9 @@ export function LoginForm() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-gray-700">Password</Label>
+              <Label htmlFor="password" className="text-gray-700">
+                Password
+              </Label>
               <Input
                 id="password"
                 type="password"
@@ -134,22 +142,27 @@ export function LoginForm() {
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <p className="text-sm text-gray-600">
-              <a href="link" className="text-blue-500 hover:underline">Forgot password?</a>
+              <a href="link" className="text-blue-500 hover:underline">
+                Forgot password?
+              </a>
             </p>
-            <Button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg" disabled={isLoading}>
+            <Button
+              type="submit"
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg"
+              disabled={isLoading}
+            >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Login
             </Button>
             <p className="text-sm text-gray-600 text-center">
               Don't have an account?{" "}
-              <a href="/register" className="text-blue-500 hover:underline">Create an account</a>
+              <a href="/register" className="text-blue-500 hover:underline">
+                Create an account
+              </a>
             </p>
           </CardFooter>
         </form>
       </Card>
     </div>
   );
-  
-  
-  
 }
