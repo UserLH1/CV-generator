@@ -15,7 +15,7 @@ import {
   Separator,
   Toolbar,
 } from "react-simple-wysiwyg";
-const TextEditor = () => {
+const TextEditor = ({ onRichTextChange }) => {
   const [value, setValue] = useState<string>("");
   return (
     <EditorProvider>
@@ -23,6 +23,7 @@ const TextEditor = () => {
         value={value}
         onChange={(e) => {
           setValue(e.currentTarget.innerHTML);
+          onRichTextChange(e.currentTarget.innerHTML);
         }}
       >
         <Toolbar>

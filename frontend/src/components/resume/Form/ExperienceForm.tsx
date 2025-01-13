@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LoaderCircle } from "lucide-react";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { ResumeInfoContext } from "../../../context/ResumeInfoContext";
 import TextEditor from "./TextEditor";
 interface ExperienceFormProps {
   enableNext: (value: boolean) => void;
@@ -17,17 +18,44 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
     endDate: "",
     workSummary: "",
   };
+
+  const [experienceList, setExperienceList] = React.useState([formField]);
+  const [loading, setLoading] = useState(false);
+  //@ts-ignore
+  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+
   const handleChange = (
     index: number,
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    const newEntries = experienceList.slice();
     const { name, value } = event.target;
+    newEntries[index][name as keyof typeof formField] = value;
+    setExperienceList(newEntries);
+  };
+
+  const addExperience = () => {
+    setExperienceList([...experienceList, formField]);
+  };
+
+  const removeExperience = () => {
     const list = [...experienceList];
-    list[index][name] = value;
+    list.pop();
     setExperienceList(list);
   };
-  const [experienceList, setExperienceList] = React.useState([formField]);
-  const [loading, setLoading] = useState(false);
+
+  const handleRichTextEditor = (value: string, name: string, index: number) => {
+    const newEntries = experienceList.slice();
+    newEntries[index][name as keyof typeof formField] = value;
+    setExperienceList(newEntries);
+  };
+
+  useEffect(() => {
+    setResumeInfo({
+      ...resumeInfo,
+      experience: experienceList,
+    });
+  }, [experienceList]);
 
   return (
     <div>
@@ -94,7 +122,11 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                   />
                 </div>
                 <div className="col-span-2">
-                  <TextEditor />
+                  <TextEditor
+                    onRichTextChange={(value: string) =>
+                      handleRichTextEditor(value, "workSummary", index)
+                    }
+                  />
                 </div>
 
                 {/* <div>
@@ -109,12 +141,25 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
             </div>
           ))}
           <div className="flex justify-between mt-3">
-            <Button
-              className="border-gray-400 rounded mt-3 text-primary "
-              variant={"outline"}
-            >
-              <p className="font-semibold">+ Add More Experience</p>
-            </Button>
+            <div>
+              <Button
+                className="border-gray-400 rounded mt-3 text-primary "
+                variant={"outline"}
+              >
+                <p className="font-semibold" onClick={addExperience}>
+                  + Add More Experience
+                </p>
+              </Button>
+
+              <Button
+                className="border-gray-400 rounded mt-3 text-primary "
+                variant={"outline"}
+              >
+                <p className="font-semibold" onClick={removeExperience}>
+                  - Remove
+                </p>
+              </Button>
+            </div>
             <Button
               className="flex justify-end text-white border rounded mt-3"
               type="submit"
