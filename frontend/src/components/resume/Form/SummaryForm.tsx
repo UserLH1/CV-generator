@@ -4,6 +4,7 @@ import axios from "axios";
 import { Brain, LoaderCircle } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { ResumeInfoContext } from "../../../context/ResumeInfoContext";
+import { AIChatSession } from "../../../services/GenAIService";
 interface SummaryFormProps {
   enableNext: (value: boolean) => void;
 }
@@ -11,8 +12,9 @@ interface SummaryFormProps {
 const SummaryForm: React.FC<SummaryFormProps> = ({ enableNext }) => {
   // @ts-ignore
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+  const [aiGeneratedSummary, setAiGeneratedSummary] = useState<any[]>([]);
   const prompt =
-    "Job Title: Full Stack Developer. Based on the job title write a summary for my resume within 4-5 lines in a professional manner and in JSON format.";
+    "Job Title: {jobTitle}. Based on the job title write a summary for my resume within 4-5 lines in a professional manner and in JSON format with field experience level and summary with experience level for junior, mid-level, senior.";
   const [loading, setLoading] = useState(false);
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     enableNext(false);
@@ -27,6 +29,16 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ enableNext }) => {
       summary: "",
     });
   }, []);
+
+  const GenerateSummaryFromAI = async () => {
+    setLoading(true);
+    const PROMPT = prompt.replace("{jobTitle}", resumeInfo?.jobTitle);
+    console.log(PROMPT);
+    const result = await AIChatSession.sendMessage(PROMPT);
+    console.log(JSON.parse(result.response.text()));
+    setAiGeneratedSummary(JSON.parse(result.response.text()));
+    setLoading(false);
+  };
 
   const onSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -59,6 +71,7 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ enableNext }) => {
               variant="outline"
               size="sm"
               className="border-primary rounded text-primary flex gap-2"
+              onClick={() => GenerateSummaryFromAI()}
             >
               <Brain className="h-4 w-4" />
               Generate with AI
@@ -79,6 +92,22 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ enableNext }) => {
             </Button>
           </div>
         </form>
+        {aiGeneratedSummary.length > 0 && (
+          <div>
+            <h2 className="font-bold text-lg  mt-5">Suggestions:</h2>
+            {aiGeneratedSummary.map((summary: any, index: number) => (
+              <div
+                key={index}
+                className="p-5 shadow-lg rounded-lg border-t-primary border-t-4 mt-5"
+              >
+                <h3 className="font-bold text-lg my-1">
+                  Experience Level: {summary.experience_level}
+                </h3>
+                <p>{summary.summary}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

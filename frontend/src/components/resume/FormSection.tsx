@@ -1,11 +1,11 @@
+import { ArrowLeft, ArrowRight, LayoutGrid } from "lucide-react";
+import { useState } from "react";
+import { Button } from "../../components/ui/button";
+import EducationForm from "./Form/EducationForm";
 import ExperienceForm from "./Form/ExperienceForm";
 import PersonalDetails from "./Form/PersonalDetails";
-import SummaryForm from "./Form/SummaryForm";
-import EducationForm from "./Form/EducationForm";
 import SkillsForm from "./Form/SkillsForm";
-import { Button } from "../../components/ui/button";
-import { ArrowLeft, ArrowRight, LayoutGrid } from "lucide-react";
-import { act, useState } from "react";
+import SummaryForm from "./Form/SummaryForm";
 
 const FormSection = () => {
   const [activeFormIndex, setActiveFormIndex] = useState(1);
@@ -47,11 +47,11 @@ const FormSection = () => {
       {activeFormIndex == 1 ? (
         <PersonalDetails enableNext={(v) => setEnableNext(v)} />
       ) : activeFormIndex == 2 ? (
-        <SummaryForm  enableNext={(v) => setEnableNext(v)}/>
+        <SummaryForm enableNext={(v) => setEnableNext(v)} />
       ) : activeFormIndex == 3 ? (
-        <ExperienceForm enableNext={(v) => setEnableNext(v)}/>
+        <ExperienceForm enableNext={(v) => setEnableNext(v)} />
       ) : activeFormIndex == 4 ? (
-        <EducationForm enableNext={(v) => setEnableNext(v)}/>
+        <EducationForm enableNext={(v) => setEnableNext(v)} />
       ) : activeFormIndex == 5 ? (
         <SkillsForm />
       ) : null}

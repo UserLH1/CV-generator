@@ -9,7 +9,6 @@ const App: React.FC = () => {
   return (
     <div>
       <header className="header">
-        
         {user ? (
           <UserPanel
             username={user}
@@ -17,7 +16,7 @@ const App: React.FC = () => {
             onLogout={logout} // Pass the logout function to UserPanel
           />
         ) : (
-          <div>Please log in</div>
+          <div></div>
         )}
       </header>
       <main>
