@@ -12,6 +12,7 @@ import ErrorBoundary from "./pages/ErrorBoundary";
 import Home from "./pages/Home";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
+import ViewResume from "./components/resume/[resumeId]/ViewResume";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,15 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: "/dashboard/resume/:resumeId/view",
+        element: (
+          <ProtectedRoute>
+            <ViewResume />
+          </ProtectedRoute>
+        ),
+      },
+
       {
         path: "/login",
         element: (

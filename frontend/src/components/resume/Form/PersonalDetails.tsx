@@ -72,6 +72,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
               className="border-gray-300 rounded"
               required
               onChange={handleChange}
+              defaultValue={resumeInfo.firstName}
             />
           </div>
           <div>
@@ -81,6 +82,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
               className="border-gray-300 rounded"
               required
               onChange={handleChange}
+              defaultValue={resumeInfo.lastName}
             />
           </div>
           <div className="col-span-2">
@@ -90,6 +92,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
               className="border-gray-300 rounded"
               required
               onChange={handleChange}
+              defaultValue={resumeInfo.jobTitle}
             />
           </div>
           <div className="col-span-2">
@@ -99,6 +102,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
               className="border-gray-300 rounded"
               required
               onChange={handleChange}
+              defaultValue={resumeInfo.address}
             />
           </div>
 
@@ -110,6 +114,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
               className="border-gray-300 rounded"
               required
               onChange={handleChange}
+              defaultValue={resumeInfo.phone}
             />
           </div>
           <div>
@@ -120,6 +125,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
               className="border-gray-300 rounded"
               required
               onChange={handleChange}
+              defaultValue={resumeInfo.email}
             />
           </div>
         </div>

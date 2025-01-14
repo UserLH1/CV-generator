@@ -6,6 +6,7 @@ import ExperienceForm from "./Form/ExperienceForm";
 import PersonalDetails from "./Form/PersonalDetails";
 import SkillsForm from "./Form/SkillsForm";
 import SummaryForm from "./Form/SummaryForm";
+import ThemeColor from "./ThemeColor";
 
 const FormSection = () => {
   const [activeFormIndex, setActiveFormIndex] = useState(1);
@@ -13,14 +14,7 @@ const FormSection = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex gap-2 border rounded"
-        >
-          <LayoutGrid />
-          Theme
-        </Button>
+ <ThemeColor />
         <div className="flex gap-2">
           {activeFormIndex > 1 && (
             <Button

@@ -73,6 +73,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                     className="border-gray-300 rounded"
                     name="title"
                     onChange={(event) => handleChange(index, event)}
+                    defaultValue={experience.title}
                   />
                 </div>
 
@@ -82,6 +83,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                     className="border-gray-300 rounded"
                     name="companyName"
                     onChange={(event) => handleChange(index, event)}
+                    defaultValue={experience.companyName}
                   />
                 </div>
 
@@ -91,6 +93,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                     className="border-gray-300 rounded"
                     name="city"
                     onChange={(event) => handleChange(index, event)}
+                    defaultValue={experience.city}
                   />
                 </div>
 
@@ -100,6 +103,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                     className="border-gray-300 rounded"
                     name="state"
                     onChange={(event) => handleChange(index, event)}
+                    defaultValue={experience.state}
                   />
                 </div>
 
@@ -110,6 +114,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                     type="date"
                     name="startDate"
                     onChange={(event) => handleChange(index, event)}
+                    defaultValue={experience.startDate}
                   />
                 </div>
                 <div>
@@ -119,10 +124,12 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                     type="date"
                     name="endDate"
                     onChange={(event) => handleChange(index, event)}
+                    defaultValue={experience.endDate}
                   />
                 </div>
                 <div className="col-span-2">
                   <TextEditor
+
                     index={index}
                     onRichTextChange={(value: string) =>
                       handleRichTextEditor(value, "workSummary", index)
