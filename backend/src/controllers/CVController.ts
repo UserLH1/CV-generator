@@ -25,10 +25,13 @@ export class CVController {
       return res.status(500).json({ message: "Server error" });
     }
   }
-  
+
   public async updateCV(req: Request, res: Response) {
     try {
-      const { id, ...cvData } = req.body; 
+      const { id, ...cvData } = req.body;
+      console.log("body request:", req.body);
+      console.log("cvData: ", cvData);
+      console.log("id cv current: ", id);
       const cvRepository = getRepository(CV);
       const existingCV = await cvRepository.findOne({ where: { id } });
       if (!existingCV) {

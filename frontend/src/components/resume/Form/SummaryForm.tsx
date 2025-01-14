@@ -3,6 +3,7 @@ import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import { Brain, LoaderCircle } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { ResumeInfoContext } from "../../../context/ResumeInfoContext";
 import { AIChatSession } from "../../../services/GenAIService";
 interface SummaryFormProps {
@@ -13,6 +14,8 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ enableNext }) => {
   // @ts-ignore
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
   const [aiGeneratedSummary, setAiGeneratedSummary] = useState<any[]>([]);
+  const { resumeId } = useParams<{ resumeId: string }>();
+
   const prompt =
     "Job Title: {jobTitle}. Based on the job title write a summary for my resume within 4-5 lines in a professional manner and in JSON format with field experience level and summary with experience level for junior, mid-level, senior.";
   const [loading, setLoading] = useState(false);
@@ -52,7 +55,7 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ enableNext }) => {
     setLoading(true);
     try {
       await axios.put(`${import.meta.env.VITE_API_URL}/api/cv/updateCV`, {
-        id: resumeInfo.id, // Or however you store the CV id
+        id: resumeId,
         ...resumeInfo,
       });
     } catch (err) {

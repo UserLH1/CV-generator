@@ -123,6 +123,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                 </div>
                 <div className="col-span-2">
                   <TextEditor
+                    index={index}
                     onRichTextChange={(value: string) =>
                       handleRichTextEditor(value, "workSummary", index)
                     }

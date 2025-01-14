@@ -4,12 +4,14 @@ import { ResumeInfoContext } from "@/context/ResumeInfoContext";
 import axios from "axios";
 import { LoaderCircle } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
-
+import { useParams } from "react-router-dom";
 interface PersonalDetailsProps {
   enableNext: (value: boolean) => void;
 }
 
 const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
+  const { resumeId } = useParams<{ resumeId: string }>();
+  console.log("resumeId in details page:: ", resumeId);
   // @ts-ignore
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
   const [formData, setFormData] = useState<{
@@ -40,12 +42,14 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
       [name]: value,
     });
   };
+  console.log("resumeInfo: ", resumeInfo);
+  console.log("id: ", resumeId);
   const onSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     try {
       await axios.put(`${import.meta.env.VITE_API_URL}/api/cv/updateCV`, {
-        id: resumeInfo.id,
+        id: resumeId,
         ...resumeInfo,
       });
       enableNext(true);

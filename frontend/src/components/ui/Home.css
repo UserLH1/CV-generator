@@ -65,8 +65,7 @@
     align-items: center;
     padding: 0 5%;
     background-color: #f8f9fa;
-    min-height: calc(100vh - 80px); /* Înălțimea ecranului minus navbar */
-    padding-top: 380px; /* Compensează pentru navbar-ul fix */
+    min-height: calc(100vh - 50px); /* Înălțimea ecranului minus navbar */
   }
   
   .hero-content {
