@@ -5,7 +5,7 @@ const ExperiencePreview = ({ resumeInfo }: { resumeInfo: any }) => {
         className="text-center font-bold text-sm mb-2"
         style={{ color: resumeInfo?.themeColor }}
       >
-        Proffesional Experience
+        Professional Experience
       </h2>
       <hr style={{ borderColor: resumeInfo?.themeColor }} className="mb-4" />
 
@@ -24,8 +24,8 @@ const ExperiencePreview = ({ resumeInfo }: { resumeInfo: any }) => {
               {experience?.currentlyWorking ? "Present" : experience?.endDate}
             </span>
           </h2>
-          {/* <p className="text-xs my-2">{experience?.workSummary}</p> */}
           <div
+            className="text-xs my-2"
             dangerouslySetInnerHTML={{ __html: experience?.workSummary }}
           ></div>
         </div>

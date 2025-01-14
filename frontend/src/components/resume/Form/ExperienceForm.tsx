@@ -4,6 +4,7 @@ import { LoaderCircle } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { ResumeInfoContext } from "../../../context/ResumeInfoContext";
 import TextEditor from "./TextEditor";
+
 interface ExperienceFormProps {
   enableNext: (value: boolean) => void;
 }
@@ -59,7 +60,6 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
 
   return (
     <div>
-      {" "}
       <div className="p-5 shadow-lg rounded-lg border-t-primary border-t-4 mt-10">
         <h2 className="font-bold text-lg">Proffesional Experience</h2>
         <p>Add your previous job experience</p>
@@ -129,15 +129,6 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                     }
                   />
                 </div>
-
-                {/* <div>
-                  <label className="text-xs">Work Summary</label>
-                  <Input
-                    className="border-gray-300 rounded"
-                    name="workSummary"
-                    onChange={(event) => handleChange(index, event)}
-                  />
-                </div> */}
               </div>
             </div>
           ))}
@@ -167,7 +158,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
               disabled={loading}
             >
               {loading ? <LoaderCircle className="animate-spin" /> : "Save"}
-            </Button>{" "}
+            </Button>
           </div>
         </div>
       </div>
