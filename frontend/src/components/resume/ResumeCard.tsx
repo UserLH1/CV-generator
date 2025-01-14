@@ -1,26 +1,122 @@
-import { Notebook } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Loader2Icon, MoreVertical, Notebook } from 'lucide-react'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import cvImage from "../../assets/cv.png"
+function ResumeCardItem({resume,refreshData}) {
 
-interface Resume {
-  id: string;
-  title: string;
+  const navigation=useNavigate();
+  const [openAlert,setOpenAlert]=useState(false);
+  const [loading,setLoading]=useState(false);
+  // const onMenuClick=(url)=>{
+  //   navigation(url)
+  // }
+
+
+  const onDelete=()=>{
+    setLoading(true);
+    fetch(`${import.meta.env.VITE_API_URL}/api/cv/deleteCV/${resume.documentId}`,{
+      method:'DELETE',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':`Bearer ${localStorage.getItem('token')}`
+
+  }}).then(res=>res.json())
+  .then(data=>{
+    console.log(data)
+    if(data.success){
+      refreshData();
+      setOpenAlert(false);
+      setLoading(false);
+    }
+  }).catch(err=>{
+    console.log(err)
+    setLoading(false);
+  })
+  }
+
+  return (
+    
+       <div className=''>
+          <Link to={'/dashboard/resume/'+resume.documentId+"/edit"}>
+        <div className='p-14  bg-gradient-to-b
+          from-pink-100 via-purple-200 to-blue-200
+        h-[280px] 
+          rounded-t-lg border-t-4
+        '
+        style={{
+          borderColor:resume?.themeColor
+        }}
+        >
+              <div className='flex 
+        items-center justify-center h-[180px] '>
+                {/* <Notebook/> */}
+                <img src={cvImage} width={80} height={80} />
+              </div>
+        </div>
+        </Link>
+        <div className='border p-3 flex justify-between  text-white rounded-b-lg shadow-lg'
+         style={{
+          background:resume?.themeColor
+        }}>
+          <h2 className='text-sm'>{resume.title}</h2>
+         
+          <DropdownMenu>
+          <DropdownMenuTrigger>
+          <MoreVertical className='h-4 w-4 cursor-pointer'/>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+           
+            <DropdownMenuItem  onClick={()=>navigation('/dashboard/resume/'+resume.documentId+"/edit")}>Edit</DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>navigation('/my-resume/'+resume.documentId+"/view")}>View</DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>navigation('/my-resume/'+resume.documentId+"/view")}>Download</DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>setOpenAlert(true)}>Delete</DropdownMenuItem>
+            
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <AlertDialog open={openAlert}>
+        
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your account
+              and remove your data from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={()=>setOpenAlert(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={onDelete} 
+            disabled={loading}>
+              {loading? <Loader2Icon className='animate-spin'/>:'Delete'}
+              </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+        </div>
+        </div>
+
+  )
 }
 
-const ResumeCard = ({ resume }: { resume: Resume }) => {
-  return (
-    <Link to={`/dashboard/resume/${resume.id}/edit`}>
-      <div className="bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
-        <div className="p-6">
-          <div className="flex items-center justify-center h-24 bg-gray-100 rounded-md">
-            <Notebook className="w-12 h-12 text-gray-500" />
-          </div>
-          <h2 className="text-xl font-semibold text-gray-800 mt-4 text-center">
-            {resume.title || "Untitled Resume"}
-          </h2>
-        </div>
-      </div>
-    </Link>
-  );
-};
-
-export default ResumeCard;
+export default ResumeCardItem

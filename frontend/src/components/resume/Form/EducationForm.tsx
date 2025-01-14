@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 function Education() {
   const [loading, setLoading] = useState(false);
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
-  const params = useParams();
+  const { resumeId } = useParams<{ resumeId: string }>();
   const [educationalList, setEducationalList] = useState([
     {
       universityName: "",
@@ -22,12 +22,25 @@ function Education() {
   ]);
 
   useEffect(() => {
-    resumeInfo && setEducationalList(resumeInfo?.education);
+    if (resumeInfo) {
+      setEducationalList(resumeInfo?.education);
+    }
   }, []);
-  const handleChange = (event, index) => {
+  interface EducationEntry {
+    universityName: string;
+    degree: string;
+    major: string;
+    startDate: string;
+    endDate: string;
+    description: string;
+  }
+
+  type HandleChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
+
+  const handleChange = (event: HandleChangeEvent, index: number) => {
     const newEntries = educationalList.slice();
     const { name, value } = event.target;
-    newEntries[index][name] = value;
+    newEntries[index][name as keyof EducationEntry] = value;
     setEducationalList(newEntries);
   };
 

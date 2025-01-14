@@ -44,4 +44,15 @@ export class CVController {
       return res.status(500).json({ error: "Error updating CV" });
     }
   }
+
+  public async getCVById(req: Request, res: Response) {
+    const { id } = req.params;
+    const cvRepository = getRepository(CV);
+    const cv = await cvRepository.findOne({ where: { id } });
+    if (!cv) {
+      return res.status(404).json({ message: "CV not found" });
+    }
+    return res.json(cv);
+  }
+
 }

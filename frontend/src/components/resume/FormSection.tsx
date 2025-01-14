@@ -53,7 +53,7 @@ const FormSection = () => {
       ) : activeFormIndex == 4 ? (
         <EducationForm enableNext={(v) => setEnableNext(v)} />
       ) : activeFormIndex == 5 ? (
-        <SkillsForm />
+        <SkillsForm enableNext={(v) => setEnableNext(v)} />
       ) : null}
     </div>
   );

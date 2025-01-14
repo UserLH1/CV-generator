@@ -45,7 +45,10 @@ interface ResumeInfo {
 }
 
 const EditResume: React.FC = () => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { resumeId } = useParams<{ resumeId: string }>();
+  console.log("resumeId in edit resume page: ", resumeId);
   const [formData, setFormData] = useState({
     personalDetails: "",
     summary: "",
@@ -54,19 +57,35 @@ const EditResume: React.FC = () => {
   });
   const [resumeInfo, setResumeInfo] = useState<ResumeInfo>(dummy);
 
+  const GetResumeInfo = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/cv/${resumeId}`
+      );
+      console.log("response", response);
+      setFormData(response.data);
+      console.log("formData", formData);
+      setResumeInfo(response.data); // Assuming the response matches ResumeInfo type
+      setError(null);
+    } catch (error) {
+      console.error("Error fetching CV:", error);
+      setError("Failed to load CV data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    // Fetch data for the resume
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/api/cv/${resumeId}`)
-      .then((response) => {
-        setFormData(response.data);
-        setResumeInfo(response.data.resumeInfo); // Adjust based on your API response
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    if (resumeId) {
+      GetResumeInfo();
+    }
   }, [resumeId]);
 
+  // Show loading state
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   const handleSaveResume = () => {
     axios
       .put(`${import.meta.env.VITE_API_URL}/api/cv/${resumeId}`, formData)

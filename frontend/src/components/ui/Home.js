@@ -1,14 +1,11 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const burgerMenu = document.querySelector('.burger-menu');
-    const menuDropdown = document.querySelector('.menu-dropdown');
-
-    if (burgerMenu && menuDropdown) {
-        burgerMenu.addEventListener('click', function () {
-            burgerMenu.classList.toggle('active');
-            // Afișează sau ascunde meniul
-            menuDropdown.style.display = menuDropdown.style.display === 'block' ? 'none' : 'block';
-        });
-    } else {
-        console.error('Elementele burger-menu sau menu-dropdown nu au fost găsite.');
-    }
-});
+// performanceAnimation.js
+export const animateCircles = () => {
+    const circles = document.querySelectorAll('.progress-circle');
+    circles.forEach((circle) => {
+      const percent = circle.getAttribute('data-percent');
+      const circlePath = circle.querySelector('.progress-circle-path');
+      const offset = 340 - (340 * percent) / 100;
+      circlePath.style.strokeDashoffset = offset;
+    });
+  };
+  
