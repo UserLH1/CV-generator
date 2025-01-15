@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import axios from "axios";
 import { LoaderCircle } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { ResumeInfoContext } from "../../../context/ResumeInfoContext";
 import TextEditor from "./TextEditor";
 
@@ -24,6 +26,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
   const [loading, setLoading] = useState(false);
   //@ts-ignore
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+  const { resumeId } = useParams<{ resumeId: string }>();
 
   const handleChange = (
     index: number,
@@ -58,10 +61,26 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
     });
   }, [experienceList]);
 
+  const onSave = async () => {
+    setLoading(true);
+    try {
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/cv/updateCV`, {
+        id: resumeId,
+        experience: experienceList,
+      });
+      enableNext(true);
+    } catch (error) {
+      console.error("Error saving experience:", error);
+      alert("Server Error, Try again!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
       <div className="p-5 shadow-lg rounded-lg border-t-primary border-t-4 mt-10">
-        <h2 className="font-bold text-lg">Proffesional Experience</h2>
+        <h2 className="font-bold text-lg">Professional Experience</h2>
         <p>Add your previous job experience</p>
         <div>
           {experienceList.map((experience, index) => (
@@ -129,7 +148,6 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                 </div>
                 <div className="col-span-2">
                   <TextEditor
-
                     index={index}
                     onRichTextChange={(value: string) =>
                       handleRichTextEditor(value, "workSummary", index)
@@ -163,6 +181,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
               className="flex justify-end text-white border rounded mt-3"
               type="submit"
               disabled={loading}
+              onClick={onSave}
             >
               {loading ? <LoaderCircle className="animate-spin" /> : "Save"}
             </Button>

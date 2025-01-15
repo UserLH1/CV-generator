@@ -35,7 +35,9 @@ function Education() {
     description: string;
   }
 
-  type HandleChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
+  type HandleChangeEvent = React.ChangeEvent<
+    HTMLInputElement | HTMLTextAreaElement
+  >;
 
   const handleChange = (event: HandleChangeEvent, index: number) => {
     const newEntries = educationalList.slice();
@@ -62,6 +64,10 @@ function Education() {
   };
   const onSave = () => {
     setLoading(true);
+    const params = {
+      resumeId: resumeId,
+    };
+
     const data = {
       data: {
         education: educationalList.map(({ id, ...rest }) => rest),

@@ -54,5 +54,4 @@ export class CVController {
     }
     return res.json(cv);
   }
-
 }

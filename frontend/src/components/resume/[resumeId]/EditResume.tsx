@@ -49,7 +49,6 @@ const EditResume: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { resumeId } = useParams<{ resumeId: string }>();
 
-  
   console.log("resumeId in edit resume page: ", resumeId);
   const [formData, setFormData] = useState({
     personalDetails: "",

@@ -21,10 +21,11 @@ const Dashboard = () => {
         console.log(error);
       });
   };
-
   useEffect(() => {
     GetResumesList();
+
   }, []);
+  console.log("resumes", resumes);
 
   return (
     <div className="p-6 md:p-10 lg:p-16 bg-gray-50 min-h-screen mt-28">

@@ -1,5 +1,6 @@
-import { ArrowLeft, ArrowRight, LayoutGrid } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useState } from "react";
+import ViewResume from "../../components/resume/[resumeId]/ViewResume";
 import { Button } from "../../components/ui/button";
 import EducationForm from "./Form/EducationForm";
 import ExperienceForm from "./Form/ExperienceForm";
@@ -14,7 +15,7 @@ const FormSection = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
- <ThemeColor />
+        <ThemeColor />
         <div className="flex gap-2">
           {activeFormIndex > 1 && (
             <Button
@@ -48,6 +49,8 @@ const FormSection = () => {
         <EducationForm enableNext={(v) => setEnableNext(v)} />
       ) : activeFormIndex == 5 ? (
         <SkillsForm enableNext={(v) => setEnableNext(v)} />
+      ) : activeFormIndex == 6 ? (
+        <ViewResume />
       ) : null}
     </div>
   );

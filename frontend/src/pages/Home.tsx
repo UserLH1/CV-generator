@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { animateCircles } from "../components/ui/Home"; 
+import { animateCircles } from "../components/ui/Home";
 import "../components/ui/Home.css";
-
 
 const Home = () => {
   useEffect(() => {
-    animateCircles(); 
+    animateCircles();
   }, []);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,7 +21,7 @@ const Home = () => {
           className="menu-icon-button"
           onClick={() => (window.location.href = "/dashboard")}
         >
-          ► 
+          ►
         </button>
       </header>
 
@@ -60,7 +59,9 @@ const Home = () => {
             </div>
             <div className="card">
               <h3>Save & Download</h3>
-              <p>Save your progress and download your CV in multiple formats.</p>
+              <p>
+                Save your progress and download your CV in multiple formats.
+              </p>
             </div>
             <div className="card">
               <h3>Job-Specific Tips</h3>
@@ -76,56 +77,75 @@ const Home = () => {
 
       {/* Sec?iunea de performan?? */}
       <section className="performance-section">
-  <h2>Our Performance</h2>
-  <div className="performance-cards">
-    <div className="performance-card">
-      <h3>CVs Created</h3>
-      <p>Over 1,000,000 CVs have been created using our platform.</p>
-      <div className="card-icon">📄</div>
-    </div>
-    <div className="performance-card">
-      <h3>Time Saved</h3>
-      <p>On average, users save 2 hours per resume compared to traditional methods.</p>
-      <div className="card-icon">⏱</div>
-    </div>
-    <div className="performance-card">
-      <h3>Customer Satisfaction</h3>
-      <p>98% of our users are satisfied with the quality of the templates.</p>
-      <div className="card-icon">👍</div>
-  </div>
-  </div>
+        <h2>Our Performance</h2>
+        <div className="performance-cards">
+          <div className="performance-card">
+            <h3>CVs Created</h3>
+            <p>Over 1,000,000 CVs have been created using our platform.</p>
+            <div className="card-icon">📄</div>
+          </div>
+          <div className="performance-card">
+            <h3>Time Saved</h3>
+            <p>
+              On average, users save 2 hours per resume compared to traditional
+              methods.
+            </p>
+            <div className="card-icon">⏱</div>
+          </div>
+          <div className="performance-card">
+            <h3>Customer Satisfaction</h3>
+            <p>
+              98% of our users are satisfied with the quality of the templates.
+            </p>
+            <div className="card-icon">👍</div>
+          </div>
+        </div>
 
-  <div className="performance-graph">
-    <h3>Performance Overview</h3>
-    <div className="circle-container">
-      <div className="progress-circle" data-percent="80">
-        <span className="progress-text">80%</span>
-        <svg className="circle" viewBox="0 0 120 120">
-          <circle className="bg-circle" cx="60" cy="60" r="55" />
-          <circle className="progress-circle-path" cx="60" cy="60" r="55" />
-        </svg>
-        <h4>Time Efficiency</h4>
-      </div>
-      <div className="progress-circle" data-percent="95">
-        <span className="progress-text">95%</span>
-        <svg className="circle" viewBox="0 0 120 120">
-          <circle className="bg-circle" cx="60" cy="60" r="55" />
-          <circle className="progress-circle-path" cx="60" cy="60" r="55" />
-        </svg>
-        <h4>Customer Satisfaction</h4>
-      </div>
-      <div className="progress-circle" data-percent="90">
-        <span className="progress-text">90%</span>
-        <svg className="circle" viewBox="0 0 120 120">
-          <circle className="bg-circle" cx="60" cy="60" r="55" />
-          <circle className="progress-circle-path" cx="60" cy="60" r="55" />
-        </svg>
-        <h4>Resumes Created</h4>
-      </div>
-    </div>
-  </div>
-</section>
-
+        <div className="performance-graph">
+          <h3>Performance Overview</h3>
+          <div className="circle-container">
+            <div className="progress-circle" data-percent="80">
+              <span className="progress-text">80%</span>
+              <svg className="circle" viewBox="0 0 120 120">
+                <circle className="bg-circle" cx="60" cy="60" r="55" />
+                <circle
+                  className="progress-circle-path"
+                  cx="60"
+                  cy="60"
+                  r="55"
+                />
+              </svg>
+              <h4>Time Efficiency</h4>
+            </div>
+            <div className="progress-circle" data-percent="95">
+              <span className="progress-text">95%</span>
+              <svg className="circle" viewBox="0 0 120 120">
+                <circle className="bg-circle" cx="60" cy="60" r="55" />
+                <circle
+                  className="progress-circle-path"
+                  cx="60"
+                  cy="60"
+                  r="55"
+                />
+              </svg>
+              <h4>Customer Satisfaction</h4>
+            </div>
+            <div className="progress-circle" data-percent="90">
+              <span className="progress-text">90%</span>
+              <svg className="circle" viewBox="0 0 120 120">
+                <circle className="bg-circle" cx="60" cy="60" r="55" />
+                <circle
+                  className="progress-circle-path"
+                  cx="60"
+                  cy="60"
+                  r="55"
+                />
+              </svg>
+              <h4>Resumes Created</h4>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

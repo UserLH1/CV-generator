@@ -20,6 +20,14 @@ router.get("/getCVs", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/getCV/:id", async (req: Request, res: Response) => {
+  try {
+    await cvController.getCVById(req, res);
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred" });
+  }
+});
+
 router.put("/updateCV", async (req: Request, res: Response) => {
   try {
     await cvController.updateCV(req, res);
