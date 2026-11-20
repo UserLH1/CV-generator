@@ -1,158 +1,69 @@
+import { AuthLayout } from "@/auth/AuthLayout";
 import { useAuth } from "@/auth/AuthContext";
-import { isAxiosError } from "axios";
-"use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-
-import axios from "@/services/api";
-import { Loader2 } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom"; // Import useNavigate from react-routerdomimport * as z from "zod";
 import { Button } from "@/components/ui/button";
-import {
-Card,
-CardContent,
-CardDescription,
-CardFooter,
-CardHeader,
-CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/hooks/use-toast";
-const formSchema = z.object({
-email: z.string().email({
-message: "Please enter a valid email address.",
-}),
-password: z.string().min(1, {
-message: "Password is required.",
-}),
+import axios from "@/services/api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { isAxiosError } from "axios";
+import { ArrowRight, Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { z } from "zod";
+
+const schema = z.object({
+  email: z.string().trim().email("Enter a valid email address."),
+  password: z.string().min(1, "Enter your password."),
 });
+
 export function LoginForm() {
-const [isLoading, setIsLoading] = useState(false);
-const { login } = useAuth();
-const navigate = useNavigate(); // Initialize navigate
-const form = useForm<z.infer<typeof formSchema>>({
-resolver: zodResolver(formSchema),
-defaultValues: {
-email: "",
-password: "",
-},
-});
-async function onSubmit(values: z.infer<typeof formSchema>) {
-setIsLoading(true);
-try {
-interface LoginResponse {
-token: string;
-}const response = await axios.post<LoginResponse>(
-`${import.meta.env.VITE_API_URL ?? ""}/api/auth/login`, // Corrected API URL
-{
-email: values.email,
-password: values.password,
-}
-);
-const token: string = response.data.token;
-login(token, values.email);
-toast({
-title: "Login Successful",
-description: "You have successfully logged in.",
-});
-form.reset();
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const registeredEmail = typeof state?.registeredEmail === "string" ? state.registeredEmail : "";
+  const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: { email: registeredEmail, password: "" },
+  });
 
+  async function signIn(values: z.infer<typeof schema>) {
+    try {
+      const { data } = await axios.post<{ token: string }>(
+        (import.meta.env.VITE_API_URL ?? "") + "/api/auth/login",
+        values,
+      );
+      login(data.token, values.email);
+      navigate("/dashboard");
+    } catch (error) {
+      const message = isAxiosError<{ message?: string }>(error) && error.response?.data?.message;
+      setError("root", { message: message || "Could not sign in. Try again." });
+    }
+  }
 
-// Redirect to the dashboard after successful login
-navigate("/dashboard");
-} catch (error: unknown) {
-if (isAxiosError(error) && error.response && error.response.data) {
-toast({
-title: "Login Failed",
-description: error.response.data.message || "Invalid credentials",
-variant: "destructive",
-});
-} else {
-toast({
-title: "An error occurred",
-description: "Please try again later.",
-variant: "destructive",
-});
-}
-} finally {
-setIsLoading(false);
-}
-}
-return (<div className="flex flex-col md:flex-row h-screen">
-{/* Fundal static cu imagine completÃƒâ€žÃ†â€™ */}
-<div
-className="hidden md:block w-1/2 h-full bg-center bg-contain bg-no-repeat"
-style={{ backgroundImage: "url('https://c8.alamy.com/comp/CXN3HJ/cv-curriculumvitae-concept-in-word-tag-cloud-on-white-background-CXN3HJ.jpg')" }}
-></div>
-<div className="md:w-1/2 w-full flex items-center justify-center min-h-screen p-4 bggray-100">
-<Card className="w-full max-w-md shadow-lg border border-border rounded-lg bg-card p-6">
-<CardHeader className="text-center">
-<CardTitle className="text-2xl font-bold font-serif text-primary">
-Login to your account
-</CardTitle>
-<CardDescription className="text-muted-foreground">
-Enter your credentials to access your account
-</CardDescription>
-</CardHeader>
-<form onSubmit={form.handleSubmit(onSubmit)}>
-<CardContent className="space-y-4">
-<div className="space-y-2">
-<Label htmlFor="email" className="text-foreground">
-Email
-</Label>
-<Input
-id="email"
-type="email"
-placeholder="john@example.com"
-className="w-full border border-border rounded-lg p-2 focus:outline-none
-focus:ring-2 focus:ring-ring"
-{...form.register("email")}
-/>
-{form.formState.errors.email && (
-<p className="text-sm text-destructive">
-{form.formState.errors.email.message}
-</p>
-)}
-</div>
-<div className="space-y-2">
-<Label htmlFor="password" className="text-foreground">
-Password
-</Label><Input
-id="password"
-type="password"
-className="w-full border border-border rounded-lg p-2 focus:outline-none
-focus:ring-2 focus:ring-ring"
-{...form.register("password")}
-/>
-{form.formState.errors.password && (
-<p className="text-sm text-destructive">
-{form.formState.errors.password.message}
-</p>
-)}
-</div>
-</CardContent>
-<CardFooter className="flex flex-col space-y-4">
-<Button
-type="submit"
-className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2 rounded-lg"
-disabled={isLoading}
->{
-isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-Login
-</Button>
-<p className="text-sm text-muted-foreground text-center">
-Don't have an account?{" "}
-<a href="/register" className="text-primary hover:underline">
-Create an account
-</a>
-</p>
-</CardFooter>
-</form>
-</Card>
-</div>
-</div>
-);
+  return (
+    <AuthLayout title="Sign in" description="Pick up your CV where you left off.">
+      {registeredEmail && <p role="status" className="mb-4 rounded border border-primary/25 bg-primary/5 px-3 py-2 text-sm text-primary">Your account is ready. Sign in to create your CV.</p>}
+      <form noValidate className="space-y-4" onSubmit={handleSubmit(signIn)}>
+        <div className="space-y-2">
+          <Label htmlFor="login-email">Email address</Label>
+          <Input id="login-email" type="email" autoComplete="username" placeholder="john@example.com" aria-invalid={!!errors.email} aria-describedby={errors.email ? "login-email-error" : undefined} {...register("email")} />
+          {errors.email && <p id="login-email-error" role="alert" className="text-sm text-destructive">{errors.email.message}</p>}
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="login-password">Password</Label>
+          <Input id="login-password" type="password" autoComplete="current-password" aria-invalid={!!errors.password} aria-describedby={errors.password ? "login-password-error" : undefined} {...register("password")} />
+          {errors.password && <p id="login-password-error" role="alert" className="text-sm text-destructive">{errors.password.message}</p>}
+        </div>
+        {errors.root?.message && <p role="alert" className="text-sm text-destructive">{errors.root.message}</p>}
+        <Button type="submit" disabled={isSubmitting} className="mt-2 h-11 w-full justify-between px-4">
+          {isSubmitting ? "Signing in…" : "Sign in"}
+          {isSubmitting ? <Loader2 className="animate-spin" aria-hidden="true" /> : <ArrowRight aria-hidden="true" />}
+        </Button>
+      </form>
+      <p className="mt-6 border-t pt-5 text-sm text-muted-foreground">
+        New to Easy CV?{" "}
+        <Link to="/register" className="font-semibold text-primary underline underline-offset-4">Create an account</Link>
+      </p>
+    </AuthLayout>
+  );
 }

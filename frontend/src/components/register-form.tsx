@@ -1,189 +1,69 @@
-"use client";
+import { AuthLayout } from "@/auth/AuthLayout";
 import { Button } from "@/components/ui/button";
-import {
-Card,
-CardContent,
-CardDescription,
-CardFooter,
-CardHeader,
-CardTitle,
-} from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/hooks/use-toast";
-import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "@/services/api";
-import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { isAxiosError } from "axios";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import * as z from "zod";
-const formSchema = z.object({
-name: z.string().min(2, {
-message: "Name must be at least 2 characters.",
-}),
-email: z.string().email({
-message: "Please enter a valid email address.",
-}),
-password: z.string().min(8, {
-message: "Password must be at least 8 characters.",
-}),
-terms: z.boolean().refine((val) => val === false, {
-message: "You must agree to the terms and conditions.",
-}),
+import { Link, useNavigate } from "react-router-dom";
+import { z } from "zod";
+
+const schema = z.object({
+  name: z.string().trim().min(2, "Enter at least 2 characters."),
+  email: z.string().trim().email("Enter a valid email address."),
+  password: z.string().min(8, "Use at least 8 characters.")
+    .refine((value) => new TextEncoder().encode(value).length <= 72, "Choose a shorter password."),
 });
+
 export function RegisterFormComponent() {
-const [isLoading, setIsLoading] = useState(false);
-const form = useForm<z.infer<typeof formSchema>>({
-resolver: zodResolver(formSchema),
-defaultValues: {name: "",
-email: "",
-password: "",
-terms: false,
-},
-});
-const navigate = useNavigate();
-async function onSubmit(values: z.infer<typeof formSchema>) {
-setIsLoading(true);
-try {
-const response = await axios.post(
-`${import.meta.env.VITE_API_URL ?? ""}/api/auth/register`, // Use VITE_API_URL here
-{
-name: values.name,
-email: values.email,
-password: values.password,
-}
-);
-if (response.status === 201) {
-alert("Registration Successful");
-toast({
-title: "Registration Successful",
-description: "You have successfully registered an account.",
-});
-form.reset(); // Reset form on success
-navigate("/login");
-}
-} catch (error: any) {
-if (
-error.response &&
-error.response.data &&
-error.response.data.message
-) {
-toast({
-title: "Error",
-description: error.response.data.message || "Registration failed.",
-});
-} else {
-toast({
-title: "Error",
-description: "An unknown error occurred.",
-});}
-} finally {
-setIsLoading(false);
-}
-}
-return (
-<div className="flex flex-col md:flex-row h-screen">
-{/* Fundal static cu imagine completă */}
-<div
-className="hidden md:block w-1/2 h-full bg-center bg-contain bg-no-repeat"
-style={{ backgroundImage: "url('https://c8.alamy.com/comp/CXN3HJ/cv-curriculumvitae-concept-in-word-tag-cloud-on-white-background-CXN3HJ.jpg')" }}
-></div>
-<div className="md:w-1/2 w-full flex items-center justify-center min-h-screen p-4 bggray-100">
-<Card className="w-full max-w-md shadow-lg border border-border rounded-lg bg-card p-6">
-<CardHeader className="text-center">
-<CardTitle className="text-2xl font-bold font-serif text-primary">
-Create an account
-</CardTitle>
-<CardDescription className="text-muted-foreground">
-Enter your details to register
-</CardDescription>
-</CardHeader>
-<form onSubmit={form.handleSubmit(onSubmit)}>
-<CardContent className="space-y-4">
-<div className="space-y-2">
-<Label htmlFor="name" className="text-foreground">
-Name
-</Label>
-<Input
-id="name"
-type="text"
-placeholder="John Doe"
-className="w-full border border-border rounded-lg p-2 focus:outline-none
-focus:ring-2 focus:ring-ring"
-{...form.register("name")}
-/>
-{form.formState.errors.name && (
-<p className="text-sm text-destructive">
-{form.formState.errors.name.message}</p>
-)}
-</div>
-<div className="space-y-2">
-<Label htmlFor="email" className="text-foreground">
-Email
-</Label>
-<Input
-id="email"
-type="email"
-placeholder="john@example.com"
-className="w-full border border-border rounded-lg p-2 focus:outline-none
-focus:ring-2 focus:ring-ring"
-{...form.register("email")}
-/>
-{form.formState.errors.email && (
-<p className="text-sm text-destructive">
-{form.formState.errors.email.message}
-</p>
-)}
-</div>
-<div className="space-y-2">
-<Label htmlFor="password" className="text-foreground">
-Password
-</Label>
-<Input
-id="password"
-type="password"
-className="w-full border border-border rounded-lg p-2 focus:outline-none
-focus:ring-2 focus:ring-ring"
-{...form.register("password")}
-/>
-{form.formState.errors.password && (
-<p className="text-sm text-destructive">
-{form.formState.errors.password.message}
-</p>
-)}
-</div>
-<div className="flex items-center space-x-2">
-<Checkbox id="terms" {...form.register("terms")} />
-<Label htmlFor="terms" className="text-sm">
-I agree to the terms and conditions
-</Label>
-</div>{form.formState.errors.terms && (
-<p className="text-sm text-destructive">
-{form.formState.errors.terms.message}
-</p>
-)}
-</CardContent>
-<CardFooter className="flex flex-col space-y-4">
-<Button
-type="submit"
-className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2 rounded-lg"
-disabled={isLoading}
->{
-isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-Register
-</Button>
-<p className="text-sm text-muted-foreground text-center">
-Already have an account?{" "}
-<a href="/login" className="text-primary hover:underline">
-Log in
-</a>
-</p>
-</CardFooter>
-</form>
-</Card>
-</div>
-</div>
-);
+  const navigate = useNavigate();
+  const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: { name: "", email: "", password: "" },
+  });
+
+  async function createAccount(values: z.infer<typeof schema>) {
+    try {
+      await axios.post((import.meta.env.VITE_API_URL ?? "") + "/api/auth/register", values);
+      navigate("/login", { state: { registeredEmail: values.email }, replace: true });
+    } catch (error) {
+      const message = isAxiosError<{ message?: string }>(error) && error.response?.data?.message;
+      setError("root", { message: message || "Could not create your account. Try again." });
+    }
+  }
+
+  return (
+    <AuthLayout title="Create an account" description="Save your first draft and return to it whenever you need.">
+      <form noValidate className="space-y-4" onSubmit={handleSubmit(createAccount)}>
+        <div className="space-y-2">
+          <Label htmlFor="register-name">Full name</Label>
+          <Input id="register-name" autoComplete="name" placeholder="John Doe" aria-invalid={!!errors.name} aria-describedby={errors.name ? "register-name-error" : undefined} {...register("name")} />
+          {errors.name && <p id="register-name-error" role="alert" className="text-sm text-destructive">{errors.name.message}</p>}
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="register-email">Email address</Label>
+          <Input id="register-email" type="email" autoComplete="email" placeholder="john@example.com" aria-invalid={!!errors.email} aria-describedby={errors.email ? "register-email-error" : undefined} {...register("email")} />
+          {errors.email && <p id="register-email-error" role="alert" className="text-sm text-destructive">{errors.email.message}</p>}
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="register-password">Password</Label>
+          <Input id="register-password" type="password" autoComplete="new-password" aria-invalid={!!errors.password} aria-describedby="register-password-hint" {...register("password")} />
+          <p id="register-password-hint" role={errors.password ? "alert" : undefined} className={errors.password ? "text-sm text-destructive" : "text-sm text-muted-foreground"}>
+            {errors.password?.message || "Use at least 8 characters."}
+          </p>
+        </div>
+        {errors.root?.message && <p role="alert" className="text-sm text-destructive">{errors.root.message}</p>}
+        <Button type="submit" disabled={isSubmitting} className="mt-2 h-11 w-full justify-between px-4">
+          {isSubmitting ? "Creating account…" : "Create account"}
+          {isSubmitting ? <Loader2 className="animate-spin" aria-hidden="true" /> : <ArrowRight aria-hidden="true" />}
+        </Button>
+      </form>
+      <p className="mt-6 border-t pt-5 text-sm text-muted-foreground">
+        Already have an account?{" "}
+        <Link to="/login" className="font-semibold text-primary underline underline-offset-4">Sign in</Link>
+      </p>
+    </AuthLayout>
+  );
 }
