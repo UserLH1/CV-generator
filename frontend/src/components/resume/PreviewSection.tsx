@@ -7,12 +7,15 @@ import PersonalDetailPreview from "./Preview/PersonalDetailPreview";
 import SkillPreview from "./Preview/SkillPreview";
 import SummaryPreview from "./Preview/SummaryPreview";
 
-const PreviewSection = () => {
+const PreviewSection = ({ classicEditor = false }: { classicEditor?: boolean }) => {
   const { resumeInfo } = useContext(ResumeInfoContext)!;
   const previewInfo = { ...resumeInfo, themeColor: resumeInfo.themeColor || defaultResumeAccent };
   return (
     <div
-      className="border border-t-8 bg-card p-5 shadow-sm break-words sm:p-10 lg:p-14 print:border-x-0 print:border-b-0 print:bg-white print:p-8 print:shadow-none"
+      className={classicEditor
+        ? "h-full break-words border-t-[20px] bg-white p-5 shadow-lg sm:p-10 lg:p-14"
+        : "border border-t-8 bg-card p-5 shadow-sm break-words sm:p-10 lg:p-14 print:border-x-0 print:border-b-0 print:bg-white print:p-8 print:shadow-none"
+      }
       style={{ borderTopColor: previewInfo.themeColor }}
     >
       {/* Personal Details */}

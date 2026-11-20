@@ -71,7 +71,7 @@ function Education({ enableNext }: { enableNext: (value: boolean) => void }) {
     }));
   }, [educationalList, setResumeInfo]);
   return (
-    <div className="mt-6 rounded-lg border border-t-4 border-t-primary bg-card p-5 shadow-sm">
+    <div className="mt-10 rounded-lg border-t-4 border-t-primary p-5 shadow-lg">
       <h2 className="font-bold text-lg">Education</h2>
       <p>Add Your educational details</p>
 

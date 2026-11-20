@@ -94,9 +94,9 @@ const EditResume: React.FC = () => {
 
   return (
     <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo }}>
-      <div className="mx-auto grid max-w-screen-2xl grid-cols-1 items-start gap-6 p-4 sm:gap-10 sm:p-10 md:grid-cols-2">
+      <div className="grid grid-cols-1 items-start gap-6 bg-white p-4 sm:gap-10 sm:p-10 md:grid-cols-2 [--background:0_0%_100%] [--border:0_0%_89.8%] [--card:0_0%_100%] [--input:0_0%_89.8%] [--primary:265_100%_68%] [--primary-foreground:0_0%_12%] [--ring:265_100%_68%]">
         <FormSection />
-        <PreviewSection />
+        <PreviewSection classicEditor />
         <button onClick={handleSaveResume}>Save Resume</button>{" "}
         {/* Example Save Button */}
       </div>

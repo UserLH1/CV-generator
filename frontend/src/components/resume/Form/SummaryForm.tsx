@@ -43,7 +43,7 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ enableNext }) => {
   return (
     <div>
       {" "}
-      <div className="mt-6 rounded-lg border border-t-4 border-t-primary bg-card p-5 shadow-sm">
+      <div className="mt-10 rounded-lg border-t-4 border-t-primary p-5 shadow-lg">
         <h2 className="font-bold text-lg">Summary</h2>
         <p>Add summary for your job title </p>
 
