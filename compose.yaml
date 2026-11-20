@@ -8,6 +8,7 @@ services:
     environment:
       DATABASE_URL: postgresql://cv:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@db:5432/cv
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET}
+      TRUST_PROXY: ${TRUST_PROXY:-}
     depends_on:
       db:
         condition: service_healthy

@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { ResumeInfoContext } from "@/context/ResumeInfoContext";
 import axios from "@/services/api";
 import { LoaderCircle } from "lucide-react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 interface PersonalDetailsProps {
   enableNext: (value: boolean) => void;
@@ -14,29 +14,11 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
 
   // @ts-ignore
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
-  const [formData, setFormData] = useState<{
-    firstName?: string;
-    lastName?: string;
-    jobTitle?: string;
-    address?: string;
-    phone?: string;
-    email?: string;
-  }>({});
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (resumeInfo.firstName && resumeInfo.lastName && resumeInfo.jobTitle) {
-      enableNext(true);
-    }
-  }, [resumeInfo, enableNext]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     enableNext(false);
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
     setResumeInfo({
       ...resumeInfo,
       [name]: value,
@@ -46,11 +28,17 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
 
   const onSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    enableNext(false);
     setLoading(true);
     try {
       await axios.put(`${import.meta.env.VITE_API_URL ?? ""}/api/cv/updateCV`, {
         id: resumeId,
-        ...resumeInfo,
+        firstName: resumeInfo.firstName,
+        lastName: resumeInfo.lastName,
+        jobTitle: resumeInfo.jobTitle,
+        address: resumeInfo.address,
+        phone: resumeInfo.phone,
+        email: resumeInfo.email,
       });
       enableNext(true);
     } catch (err) {

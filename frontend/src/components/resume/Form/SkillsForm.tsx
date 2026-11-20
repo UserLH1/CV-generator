@@ -14,23 +14,10 @@ interface SkillsFormProps {
 }
 
 const SkillsForm: React.FC<{ enableNext: (value: boolean) => void }> = ({ enableNext }) => {
-  const [skillsList, setSkillsList] = useState<SkillsFormProps[]>([
-    {
-      name: "",
-      rating: 0,
-    },
-  ]);
-
   const { resumeId } = useParams<{ resumeId: string }>();
   const [loading, setLoading] = useState(false);
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)!;
-
-  // Sync resumeInfo skills with local state on mount
-  useEffect(() => {
-    if (resumeInfo) {
-      setSkillsList(resumeInfo.skills);
-    }
-  }, []);
+  const [skillsList, setSkillsList] = useState<SkillsFormProps[]>(() => resumeInfo.skills);
 
   // Update resumeInfo whenever skillsList changes
   useEffect(() => {
@@ -45,6 +32,7 @@ const SkillsForm: React.FC<{ enableNext: (value: boolean) => void }> = ({ enable
     name: keyof SkillsFormProps,
     value: number | string
   ) => {
+    enableNext(false);
     const newEntries = skillsList.slice();
     newEntries[index] = {
       ...newEntries[index],
@@ -54,6 +42,7 @@ const SkillsForm: React.FC<{ enableNext: (value: boolean) => void }> = ({ enable
   };
 
   const AddNewSkills = () => {
+    enableNext(false);
     setSkillsList([
       ...skillsList,
       {
@@ -64,6 +53,7 @@ const SkillsForm: React.FC<{ enableNext: (value: boolean) => void }> = ({ enable
   };
 
   const RemoveSkills = () => {
+    enableNext(false);
     setSkillsList((skillsList) => skillsList.slice(0, -1));
   };
 
@@ -91,8 +81,8 @@ const SkillsForm: React.FC<{ enableNext: (value: boolean) => void }> = ({ enable
 
       <div>
         {skillsList.map((item, index) => (
-          <div className="flex justify-between mb-2 border rounded-lg p-3 ">
-            <div>
+          <div key={index} className="flex flex-wrap items-center justify-between gap-2 mb-2 border rounded-lg p-3">
+            <div className="min-w-0 flex-1">
               <label className="text-xs">Name</label>
               <Input
                 className="w-full"
@@ -108,8 +98,8 @@ const SkillsForm: React.FC<{ enableNext: (value: boolean) => void }> = ({ enable
           </div>
         ))}
       </div>
-      <div className="flex justify-between">
-        <div className="flex gap-2">
+      <div className="flex flex-wrap justify-between gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button
             variant="outline"
             onClick={AddNewSkills}

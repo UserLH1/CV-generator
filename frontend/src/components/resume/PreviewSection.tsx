@@ -10,7 +10,7 @@ const PreviewSection = () => {
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)!;
   return (
     <div
-      className="shadow-lg p-14 h-full border-t-[20px]"
+      className="shadow-lg p-5 sm:p-10 lg:p-14 print:p-8 h-full border-t-[20px] break-words"
       style={{ borderColor: resumeInfo?.themeColor }}
     >
       {/* Personal Details */}

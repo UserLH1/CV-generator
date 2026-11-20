@@ -1,35 +1,24 @@
 import { Router } from 'express';
+import { rateLimit } from 'express-rate-limit';
 import { AuthController } from '../controllers/AuthController';
 
 const router = Router();
 const authController = new AuthController();
 
-import { Request, Response } from 'express';
-
-router.post('/register', async (req: Request, res: Response) => {
-	  console.log('Register route hit');
-
-	try {
-		await authController.register(req, res);
-	} catch (error) {
-		if (error instanceof Error) {
-			res.status(500).send(error.message);
-		} else {
-			res.status(500).send('An unknown error occurred');
-		}
-	}
+const authLimit = (limit: number) => rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: { message: 'Too many attempts. Please try again later.' },
 });
 
-router.post('/login', async (req: Request, res: Response) => {
-	try {
-		await authController.login(req, res);
-	} catch (error) {
-		if (error instanceof Error) {
-			res.status(500).send(error.message);
-		} else {
-			res.status(500).send('An unknown error occurred');
-		}
-	}
+router.post('/register', authLimit(8), (req, res, next) => {
+  authController.register(req, res).catch(next);
+});
+
+router.post('/login', authLimit(15), (req, res, next) => {
+  authController.login(req, res).catch(next);
 });
 
 export default router;

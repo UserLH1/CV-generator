@@ -11,55 +11,52 @@ interface ExperienceFormProps {
   enableNext: (value: boolean) => void;
 }
 
-const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
-  const formField = {
-    title: "",
-    companyName: "",
-    city: "",
-    state: "",
-    startDate: "",
-    endDate: "",
-    workSummary: "",
-  };
+const emptyExperience = () => ({
+  id: 0,
+  title: "",
+  companyName: "",
+  city: "",
+  state: "",
+  startDate: "",
+  endDate: "",
+  currentlyWorking: false,
+  workSummary: "",
+});
 
-  const [experienceList, setExperienceList] = React.useState([formField]);
+const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
+  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)!;
+  const [experienceList, setExperienceList] = useState(() =>
+    resumeInfo.experience.length ? resumeInfo.experience : [emptyExperience()]
+  );
   const [loading, setLoading] = useState(false);
-  //@ts-ignore
-  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
   const { resumeId } = useParams<{ resumeId: string }>();
 
-  const handleChange = (
-    index: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newEntries = experienceList.slice();
-    const { name, value } = event.target;
-    newEntries[index][name as keyof typeof formField] = value;
-    setExperienceList(newEntries);
+  const updateExperience = (index: number, name: string, value: string) => {
+    enableNext(false);
+    setExperienceList((entries) =>
+      entries.map((entry, entryIndex) =>
+        entryIndex === index ? { ...entry, [name]: value } : entry
+      )
+    );
+  };
+
+  const handleChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    updateExperience(index, event.target.name, event.target.value);
   };
 
   const addExperience = () => {
-    setExperienceList([...experienceList, formField]);
+    enableNext(false);
+    setExperienceList((entries) => [...entries, emptyExperience()]);
   };
 
   const removeExperience = () => {
-    const list = [...experienceList];
-    list.pop();
-    setExperienceList(list);
-  };
-
-  const handleRichTextEditor = (value: string, name: string, index: number) => {
-    const newEntries = experienceList.slice();
-    newEntries[index][name as keyof typeof formField] = value;
-    setExperienceList(newEntries);
+    enableNext(false);
+    setExperienceList((entries) => entries.slice(0, -1));
   };
 
   useEffect(() => {
-    setResumeInfo({
-      ...resumeInfo,
-      experience: experienceList,
-    });
-  }, [experienceList]);
+    setResumeInfo((current) => ({ ...current, experience: experienceList }));
+  }, [experienceList, setResumeInfo]);
 
   const onSave = async () => {
     setLoading(true);
@@ -92,7 +89,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                     className="border-gray-300 rounded"
                     name="title"
                     onChange={(event) => handleChange(index, event)}
-                    defaultValue={experience.title}
+                    value={experience.title}
                   />
                 </div>
 
@@ -102,7 +99,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                     className="border-gray-300 rounded"
                     name="companyName"
                     onChange={(event) => handleChange(index, event)}
-                    defaultValue={experience.companyName}
+                    value={experience.companyName}
                   />
                 </div>
 
@@ -112,7 +109,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                     className="border-gray-300 rounded"
                     name="city"
                     onChange={(event) => handleChange(index, event)}
-                    defaultValue={experience.city}
+                    value={experience.city}
                   />
                 </div>
 
@@ -122,7 +119,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                     className="border-gray-300 rounded"
                     name="state"
                     onChange={(event) => handleChange(index, event)}
-                    defaultValue={experience.state}
+                    value={experience.state}
                   />
                 </div>
 
@@ -133,7 +130,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                     type="date"
                     name="startDate"
                     onChange={(event) => handleChange(index, event)}
-                    defaultValue={experience.startDate}
+                    value={experience.startDate}
                   />
                 </div>
                 <div>
@@ -143,14 +140,14 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                     type="date"
                     name="endDate"
                     onChange={(event) => handleChange(index, event)}
-                    defaultValue={experience.endDate}
+                    value={experience.endDate}
                   />
                 </div>
                 <div className="col-span-2">
                   <TextEditor
-                    index={index}
-                    onRichTextChange={(value: string) =>
-                      handleRichTextEditor(value, "workSummary", index)
+                    value={experience.workSummary}
+                    onRichTextChange={(value) =>
+                      updateExperience(index, "workSummary", value)
                     }
                   />
                 </div>
@@ -161,20 +158,21 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
             <div>
               <Button
                 className="border-gray-400 rounded mt-3 text-primary "
-                variant={"outline"}
+                type="button"
+                variant="outline"
+                onClick={addExperience}
               >
-                <p className="font-semibold" onClick={addExperience}>
-                  + Add More Experience
-                </p>
+                + Add More Experience
               </Button>
 
               <Button
                 className="border-gray-400 rounded mt-3 text-primary "
-                variant={"outline"}
+                type="button"
+                variant="outline"
+                onClick={removeExperience}
+                disabled={experienceList.length === 0}
               >
-                <p className="font-semibold" onClick={removeExperience}>
-                  - Remove
-                </p>
+                - Remove
               </Button>
             </div>
             <Button

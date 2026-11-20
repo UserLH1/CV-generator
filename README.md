@@ -86,3 +86,29 @@ cd cv-generator
 
 - Open your browser and navigate to `http://localhost:5173` to use the application.
 - Interact with the interface to create, view, and manage CVs.
+## Docker preview and deployment
+
+Set POSTGRES_PASSWORD and JWT_SECRET in a private .env beside compose.yaml.
+Use independent random, URL-safe values. Set CV_PORT if the default loopback
+port 18086 is already in use.
+
+    docker compose up -d --build --wait
+    curl --fail http://127.0.0.1:18086/api/ready
+
+Place the loopback listener behind HTTPS before accepting public traffic.
+Keep PostgreSQL on the Compose network. For per-client authentication
+limits behind a reverse proxy, set TRUST_PROXY to the exact immediate
+proxy IP as seen by the application and confirm the proxy rewrites forwarded
+headers. Login allows 15 requests per 15 minutes and registration allows 8.
+The limits are per client IP and held in the app process.
+
+Schedule the backup script with a private destination outside the checkout,
+then copy archives off the host into encrypted storage with a retention
+policy. A verification run restores to a temporary database and drops it
+after checking the schema and reporting the restored row counts.
+
+    CV_BACKUP_DIR=/var/backups/cv-generator bash ops/backup.sh --verify-restore
+
+Point the external HTTPS monitor at /api/ready. It returns HTTP 503 if the
+app cannot query PostgreSQL. Test alert delivery and recovery before
+accepting public signups.

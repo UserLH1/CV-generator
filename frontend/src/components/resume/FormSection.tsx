@@ -1,6 +1,6 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useState } from "react";
-import ViewResume from "../../components/resume/[resumeId]/ViewResume";
+import { Link, useParams } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import EducationForm from "./Form/EducationForm";
 import ExperienceForm from "./Form/ExperienceForm";
@@ -11,7 +11,13 @@ import ThemeColor from "./ThemeColor";
 
 const FormSection = () => {
   const [activeFormIndex, setActiveFormIndex] = useState(1);
-  const [enableNext, setEnableNext] = useState(false);
+  const { resumeId } = useParams();
+  const [stepStatus, setStepStatus] = useState<Record<number, boolean>>({});
+  // Optional steps can be skipped until the user makes a change.
+  const enableNext = stepStatus[activeFormIndex] ?? activeFormIndex > 1;
+  const setEnableNext = (enabled: boolean) => {
+    setStepStatus((status) => ({ ...status, [activeFormIndex]: enabled }));
+  };
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -27,30 +33,37 @@ const FormSection = () => {
               <ArrowLeft />
             </Button>
           )}
-          <Button
-            disabled={!enableNext}
-            className="flex gap-2 text-white border rounded"
-            size="sm"
-            onClick={() => setActiveFormIndex((prevIndex) => prevIndex + 1)}
-          >
-            Next
-            <ArrowRight />
-          </Button>
+          {activeFormIndex < 6 && (
+            <Button
+              disabled={!enableNext}
+              className="flex gap-2 text-white border rounded"
+              size="sm"
+              onClick={() => setActiveFormIndex((prevIndex) => prevIndex + 1)}
+            >
+              Next
+              <ArrowRight />
+            </Button>
+          )}
         </div>
       </div>
       {/* Personal Detail */}
       {activeFormIndex == 1 ? (
-        <PersonalDetails enableNext={(v) => setEnableNext(v)} />
+        <PersonalDetails enableNext={setEnableNext} />
       ) : activeFormIndex == 2 ? (
-        <SummaryForm enableNext={(v) => setEnableNext(v)} />
+        <SummaryForm enableNext={setEnableNext} />
       ) : activeFormIndex == 3 ? (
-        <ExperienceForm enableNext={(v) => setEnableNext(v)} />
+        <ExperienceForm enableNext={setEnableNext} />
       ) : activeFormIndex == 4 ? (
-        <EducationForm enableNext={(v) => setEnableNext(v)} />
+        <EducationForm enableNext={setEnableNext} />
       ) : activeFormIndex == 5 ? (
-        <SkillsForm enableNext={(v) => setEnableNext(v)} />
+        <SkillsForm enableNext={setEnableNext} />
       ) : activeFormIndex == 6 ? (
-        <ViewResume />
+        <div className="space-y-4">
+          <h2 className="text-lg font-bold">Your resume</h2>
+          <Button asChild>
+            <Link to={'/dashboard/resume/' + resumeId + '/view'}>Open print preview</Link>
+          </Button>
+        </div>
       ) : null}
     </div>
   );

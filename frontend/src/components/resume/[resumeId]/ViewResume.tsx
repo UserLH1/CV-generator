@@ -56,21 +56,21 @@ function ViewResume() {
     <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo }}>
       {/* AceastÄƒ secÈ›iune e ascunsÄƒ la print */}
       <div id="no-print">
-        <div className="my-10 mx-10 md:mx-20 lg:mx-36">
+        <div className="my-10 mx-4 md:mx-20 lg:mx-36">
           <h2 className="text-center text-2xl font-medium">
             Your resume
           </h2>
           <p className="text-center text-gray-400">
             Download a copy of your resume to share.
           </p>
-          <div className="flex justify-between px-44 my-10">
+          <div className="flex justify-center my-10">
             <Button onClick={HandleDownload}>Download</Button>
           </div>
         </div>
       </div>
 
       {/* AceastÄƒ secÈ›iune rÄƒmÃ¢ne vizibilÄƒ È™i la print */}
-      <div className="my-10 mx-10 md:mx-20 lg:mx-36">
+      <div className="my-10 mx-4 md:mx-20 lg:mx-36">
         <div id="print-area">
           <PreviewSection />
         </div>

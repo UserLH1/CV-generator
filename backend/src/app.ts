@@ -7,6 +7,7 @@ import database from './data-source';
 
 const app = express();
 app.disable('x-powered-by');
+if (process.env.TRUST_PROXY) app.set('trust proxy', process.env.TRUST_PROXY);
 if (process.env.APP_ORIGIN) app.use(cors({ origin: process.env.APP_ORIGIN }));
 app.use(express.json({ limit: '256kb' }));
 app.use('/api', (_req, res, next) => {

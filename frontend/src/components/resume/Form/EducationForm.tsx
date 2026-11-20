@@ -11,22 +11,8 @@ function Education({ enableNext }: { enableNext: (value: boolean) => void }) {
   const [loading, setLoading] = useState(false);
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)!;
   const { resumeId } = useParams<{ resumeId: string }>();
-  const [educationalList, setEducationalList] = useState([
-    {
-      universityName: "",
-      degree: "",
-      major: "",
-      startDate: "",
-      endDate: "",
-      description: "",
-    },
-  ]);
+  const [educationalList, setEducationalList] = useState<EducationEntry[]>(() => resumeInfo.education);
 
-  useEffect(() => {
-    if (resumeInfo) {
-      setEducationalList(resumeInfo?.education);
-    }
-  }, []);
   interface EducationEntry {
     universityName: string;
     degree: string;
@@ -41,6 +27,7 @@ function Education({ enableNext }: { enableNext: (value: boolean) => void }) {
   >;
 
   const handleChange = (event: HandleChangeEvent, index: number) => {
+    enableNext(false);
     const newEntries = educationalList.slice();
     const { name, value } = event.target;
     newEntries[index][name as keyof EducationEntry] = value;
@@ -48,6 +35,7 @@ function Education({ enableNext }: { enableNext: (value: boolean) => void }) {
   };
 
   const AddNewEducation = () => {
+    enableNext(false);
     setEducationalList([
       ...educationalList,
       {
@@ -61,6 +49,7 @@ function Education({ enableNext }: { enableNext: (value: boolean) => void }) {
     ]);
   };
   const RemoveEducation = () => {
+    enableNext(false);
     setEducationalList((educationalList) => educationalList.slice(0, -1));
   };
   const onSave = async () => {
@@ -76,11 +65,11 @@ function Education({ enableNext }: { enableNext: (value: boolean) => void }) {
   };
 
   useEffect(() => {
-    setResumeInfo({
-      ...resumeInfo,
+    setResumeInfo((current) => ({
+      ...current,
       education: educationalList.map((entry, index) => ({ id: index, ...entry })),
-    });
-  }, [educationalList]);
+    }));
+  }, [educationalList, setResumeInfo]);
   return (
     <div className="p-5 shadow-lg rounded-lg border-t-primary border-t-4 mt-10">
       <h2 className="font-bold text-lg">Education</h2>
@@ -88,9 +77,9 @@ function Education({ enableNext }: { enableNext: (value: boolean) => void }) {
 
       <div>
         {educationalList.map((item, index) => (
-          <div>
-            <div className="grid grid-cols-2 gap-3 border p-3 my-5 rounded-lg">
-              <div className="col-span-2">
+          <div key={index}>
+            <div className="grid grid-cols-1 gap-3 border p-3 my-5 rounded-lg sm:grid-cols-2">
+              <div className="sm:col-span-2">
                 <label>University Name</label>
                 <Input
                   name="universityName"
@@ -132,7 +121,7 @@ function Education({ enableNext }: { enableNext: (value: boolean) => void }) {
                   defaultValue={item?.endDate}
                 />
               </div>
-              <div className="col-span-2">
+              <div className="sm:col-span-2">
                 <label>Description</label>
                 <Textarea
                   name="description"
@@ -144,8 +133,8 @@ function Education({ enableNext }: { enableNext: (value: boolean) => void }) {
           </div>
         ))}
       </div>
-      <div className="flex justify-between">
-        <div className="flex gap-2">
+      <div className="flex flex-wrap justify-between gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button
             variant="outline"
             onClick={AddNewEducation}

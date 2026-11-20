@@ -4,6 +4,9 @@ import jwt from 'jsonwebtoken';
 import database from '../data-source';
 import { User } from '../entities/User';
 
+// Keep password verification work similar for unknown and existing accounts.
+const dummyPasswordHash = bcrypt.hashSync('unused-auth-placeholder', 10);
+
 export class AuthController {
 
   //register a new user
@@ -53,14 +56,9 @@ export class AuthController {
     try {
       // Check if the user exists
       const user = await userRepository.findOne({ where: { email: email.trim().toLowerCase() } });
-      if (!user) {
+      const isPasswordValid = await bcrypt.compare(password, user?.password ?? dummyPasswordHash);
+      if (!user || !isPasswordValid) {
         return res.status(401).json({ message: 'Invalid credentials' });
-      }
-
-      // Compare the provided password with the stored hash
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
-        return res.status(400).json({ message: 'Invalid credentials' });
       }
 
       // Generate a JWT token

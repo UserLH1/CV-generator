@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "@/services/api";
 import { LoaderCircle } from "lucide-react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ResumeInfoContext } from "../../../context/ResumeInfoContext";
 interface SummaryFormProps {
@@ -23,12 +23,6 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ enableNext }) => {
     });
   };
 
-  useEffect(() => {
-    if (resumeInfo.firstName && resumeInfo.lastName && resumeInfo.jobTitle) {
-      enableNext(true);
-    }
-  }, [resumeInfo, enableNext]);
-
   const onSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     enableNext(false);
@@ -36,7 +30,7 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ enableNext }) => {
     try {
       await axios.put(`${import.meta.env.VITE_API_URL ?? ""}/api/cv/updateCV`, {
         id: resumeId,
-        ...resumeInfo,
+        summary: resumeInfo.summary,
       });
       enableNext(true);
     } catch (err) {
