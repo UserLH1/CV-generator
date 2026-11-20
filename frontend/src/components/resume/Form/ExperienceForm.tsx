@@ -146,6 +146,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
                 <div className="col-span-2">
                   <TextEditor
                     value={experience.workSummary}
+                    role={experience.title || resumeInfo.jobTitle}
                     onRichTextChange={(value) =>
                       updateExperience(index, "workSummary", value)
                     }

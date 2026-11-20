@@ -112,3 +112,16 @@ after checking the schema and reporting the restored row counts.
 Point the external HTTPS monitor at /api/ready. It returns HTTP 503 if the
 app cannot query PostgreSQL. Test alert delivery and recovery before
 accepting public signups.
+
+### Enable AI drafting
+
+Set GEMINI_API_KEY in the server environment or the private Compose .env,
+then recreate the app container. GEMINI_MODEL is optional and defaults to
+gemini-3.1-flash-lite. Use a Gemini API key restricted to the Gemini API.
+Never use a VITE_ variable for this key.
+
+The Summary and Experience drafting tools send the role and notes entered
+in the drafting panel to Google Gemini. Users review suggestions and choose
+whether to apply them before saving the CV. The endpoint requires sign-in
+and limits requests to 8 per account and 60 for the app per 15 minutes.
+The editor can still be used manually without a Gemini key.

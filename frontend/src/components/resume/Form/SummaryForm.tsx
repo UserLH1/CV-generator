@@ -1,3 +1,4 @@
+import { AiDraft } from "./AiDraft";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "@/services/api";
@@ -10,17 +11,13 @@ interface SummaryFormProps {
 }
 
 const SummaryForm: React.FC<SummaryFormProps> = ({ enableNext }) => {
-  // @ts-ignore
-  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)!;
   const { resumeId } = useParams<{ resumeId: string }>();
 
   const [loading, setLoading] = useState(false);
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const updateSummary = (summary: string) => {
     enableNext(false);
-    setResumeInfo({
-      ...resumeInfo,
-      summary: e.target.value,
-    });
+    setResumeInfo((current) => ({ ...current, summary }));
   };
 
   const onSave = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -55,8 +52,9 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ enableNext }) => {
             className="border-input rounded mt-5"
             value={resumeInfo.summary ?? ""}
             required
-            onChange={handleChange}
+            onChange={(event) => updateSummary(event.target.value)}
           />
+          <AiDraft kind="summary" role={resumeInfo.jobTitle} onApply={updateSummary} />
           <div className="mt-5 flex justify-end">
             <Button
               className="flex justify-end text-primary-foreground border rounded mt-3"

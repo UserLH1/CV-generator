@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 import jwt from 'jsonwebtoken';
+import { draftAccountLimit, draftServiceLimit, generateDraft } from './cv-draft';
 import { CVController } from '../controllers/CVController';
 
 const router = Router();
@@ -32,6 +33,7 @@ function handle(handler: Handler) {
   };
 }
 
+router.post('/ai/draft', draftAccountLimit, draftServiceLimit, handle(generateDraft));
 router.post('/createCV', handle(controller.createCV));
 router.get('/getCVs', handle(controller.listCVs));
 router.get(['/getCV/:id', '/:id'], handle(controller.getCV));
