@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import axios from "@/services/api";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -48,7 +48,7 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
 setIsLoading(true);
 try {
 const response = await axios.post(
-`${import.meta.env.VITE_API_URL}/api/auth/register`, // Use VITE_API_URL here
+`${import.meta.env.VITE_API_URL ?? ""}/api/auth/register`, // Use VITE_API_URL here
 {
 name: values.name,
 email: values.email,

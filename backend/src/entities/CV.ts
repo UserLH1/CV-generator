@@ -8,6 +8,9 @@ export class CV {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
+  @Column({ type: "integer" })
+  ownerId!: number;
+
   @Column({ nullable: true })
   title?: string; 
 

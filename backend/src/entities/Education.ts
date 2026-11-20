@@ -24,6 +24,6 @@ export class Education {
   @Column({ type: 'text', nullable: true })
   description?: string;
 
-  @ManyToOne(() => CV, (cv) => cv.education)
+  @ManyToOne(() => CV, (cv) => cv.education, { onDelete: "CASCADE", orphanedRowAction: "delete" })
   cv?: CV;
 }

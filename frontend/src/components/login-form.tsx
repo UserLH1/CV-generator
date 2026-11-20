@@ -1,8 +1,10 @@
+import { useAuth } from "@/auth/AuthContext";
+import { isAxiosError } from "axios";
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import axios from "axios";
+import axios from "@/services/api";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -29,6 +31,7 @@ message: "Password is required.",
 });
 export function LoginForm() {
 const [isLoading, setIsLoading] = useState(false);
+const { login } = useAuth();
 const navigate = useNavigate(); // Initialize navigate
 const form = useForm<z.infer<typeof formSchema>>({
 resolver: zodResolver(formSchema),
@@ -43,29 +46,25 @@ try {
 interface LoginResponse {
 token: string;
 }const response = await axios.post<LoginResponse>(
-`${import.meta.env.VITE_API_URL}/api/auth/login`, // Corrected API URL
+`${import.meta.env.VITE_API_URL ?? ""}/api/auth/login`, // Corrected API URL
 {
 email: values.email,
 password: values.password,
 }
 );
 const token: string = response.data.token;
-localStorage.setItem("token", token); // Store token in localStorage or context
-localStorage.setItem("user", values.email); // Store user in localStorage or context
-console.log("Token:", token);
+login(token, values.email);
 toast({
 title: "Login Successful",
 description: "You have successfully logged in.",
 });
 form.reset();
-console.log("Successfully logged in!");
-console.log("Navigating to dashboard...");
-window.location.reload();
-console.log("token", localStorage.getItem("token"));
+
+
 // Redirect to the dashboard after successful login
 navigate("/dashboard");
 } catch (error: unknown) {
-if (axios.isAxiosError(error) && error.response && error.response.data) {
+if (isAxiosError(error) && error.response && error.response.data) {
 toast({
 title: "Login Failed",
 description: error.response.data.message || "Invalid credentials",
@@ -83,7 +82,7 @@ setIsLoading(false);
 }
 }
 return (<div className="flex flex-col md:flex-row h-screen">
-{/* Fundal static cu imagine completă */}
+{/* Fundal static cu imagine completÃƒâ€žÃ†â€™ */}
 <div
 className="hidden md:block w-1/2 h-full bg-center bg-contain bg-no-repeat"
 style={{ backgroundImage: "url('https://c8.alamy.com/comp/CXN3HJ/cv-curriculumvitae-concept-in-word-tag-cloud-on-white-background-CXN3HJ.jpg')" }}

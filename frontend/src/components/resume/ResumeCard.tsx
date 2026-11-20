@@ -21,7 +21,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import cvImage from "../../assets/cv.png"
-function ResumeCardItem({resume,refreshData}) {
+function ResumeCardItem({resume,refreshData}: {resume: { id: string; title?: string; themeColor?: string }; refreshData: () => void }) {
 
   const navigation=useNavigate();
   const [openAlert,setOpenAlert]=useState(false);
@@ -33,7 +33,7 @@ function ResumeCardItem({resume,refreshData}) {
 
   const onDelete=()=>{
     setLoading(true);
-    fetch(`${import.meta.env.VITE_API_URL}/api/cv/deleteCV/${resume.documentId}`,{
+    fetch(`${import.meta.env.VITE_API_URL ?? ""}/api/cv/deleteCV/${resume.id}`,{
       method:'DELETE',
       headers:{
         'Content-Type':'application/json',
@@ -41,14 +41,12 @@ function ResumeCardItem({resume,refreshData}) {
 
   }}).then(res=>res.json())
   .then(data=>{
-    console.log(data)
     if(data.success){
       refreshData();
       setOpenAlert(false);
       setLoading(false);
     }
   }).catch(err=>{
-    console.log(err)
     setLoading(false);
   })
   }
@@ -90,21 +88,21 @@ function ResumeCardItem({resume,refreshData}) {
           <DropdownMenuContent>
             <DropdownMenuItem
               onClick={() =>
-                navigation("/dashboard/resume//edit")
+                navigation("/dashboard/resume/" + resume.id + "/edit")
               }
             >
               Edit
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() =>
-                navigation("/my-resume/" + resume.documentId + "/view")
+                navigation("/dashboard/resume/" + resume.id + "/view")
               }
             >
               View
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() =>
-                navigation("/my-resume/" + resume.documentId + "/view")
+                navigation("/dashboard/resume/" + resume.id + "/view")
               }
             >
               Download
@@ -120,8 +118,7 @@ function ResumeCardItem({resume,refreshData}) {
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
+                This action cannot be undone. This permanently deletes this resume.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

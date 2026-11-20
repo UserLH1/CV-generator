@@ -18,5 +18,5 @@
     "outDir": "./dist"
   },
   "include": ["src"],                        // Include application source code
-  "exclude": ["node_modules", "dist", "src/**/*.js"]
+  "exclude": ["node_modules", "dist", "src/**/*.js", "src/**/*.test.tsx"]
 }

@@ -3,16 +3,17 @@ import { Input } from "@/components/ui/input";
 import { ResumeInfoContext } from "@/context/ResumeInfoContext";
 import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
-import axios from "axios";
+import axios from "@/services/api";
 import { LoaderCircle } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 interface SkillsFormProps {
+  id?: number;
   name: string;
   rating: number;
 }
 
-const SkillsForm: React.FC<SkillsFormProps> = ({ enableNext }) => {
+const SkillsForm: React.FC<{ enableNext: (value: boolean) => void }> = ({ enableNext }) => {
   const [skillsList, setSkillsList] = useState<SkillsFormProps[]>([
     {
       name: "",
@@ -22,7 +23,7 @@ const SkillsForm: React.FC<SkillsFormProps> = ({ enableNext }) => {
 
   const { resumeId } = useParams<{ resumeId: string }>();
   const [loading, setLoading] = useState(false);
-  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)!;
 
   // Sync resumeInfo skills with local state on mount
   useEffect(() => {
@@ -33,9 +34,9 @@ const SkillsForm: React.FC<SkillsFormProps> = ({ enableNext }) => {
 
   // Update resumeInfo whenever skillsList changes
   useEffect(() => {
-    setResumeInfo((prev: { skills: SkillsFormProps[] }) => ({
+    setResumeInfo((prev) => ({
       ...prev,
-      skills: skillsList,
+      skills: skillsList.map((skill, index) => ({ ...skill, id: skill.id ?? index })),
     }));
   }, [skillsList, setResumeInfo]);
 
@@ -68,9 +69,9 @@ const SkillsForm: React.FC<SkillsFormProps> = ({ enableNext }) => {
 
   const onSave = async () => {
     setLoading(true);
-    console.log("skillsLis ", skillsList, " id ", resumeId);
+
     try {
-      await axios.put(`${import.meta.env.VITE_API_URL}/api/cv/updateCV`, {
+      await axios.put(`${import.meta.env.VITE_API_URL ?? ""}/api/cv/updateCV`, {
         id: resumeId,
         skills: skillsList,
       });
@@ -102,7 +103,7 @@ const SkillsForm: React.FC<SkillsFormProps> = ({ enableNext }) => {
             <Rating
               style={{ maxWidth: 120 }}
               value={item.rating}
-              onChange={(v) => handleChange(index, "rating", v)}
+              onChange={(v: number) => handleChange(index, "rating", v)}
             />
           </div>
         ))}

@@ -1,3 +1,4 @@
+import axios from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,9 +7,9 @@ import { LoaderCircle } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-function Education() {
+function Education({ enableNext }: { enableNext: (value: boolean) => void }) {
   const [loading, setLoading] = useState(false);
-  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)!;
   const { resumeId } = useParams<{ resumeId: string }>();
   const [educationalList, setEducationalList] = useState([
     {
@@ -62,35 +63,22 @@ function Education() {
   const RemoveEducation = () => {
     setEducationalList((educationalList) => educationalList.slice(0, -1));
   };
-  const onSave = () => {
+  const onSave = async () => {
     setLoading(true);
-    const params = {
-      resumeId: resumeId,
-    };
-
-    const data = {
-      data: {
-        education: educationalList.map(({ id, ...rest }) => rest),
-      },
-    };
-
-    // GlobalApi.UpdateResumeDetail(params.resumeId, data).then(
-    //   (resp) => {
-    //     console.log(resp);
-    //     setLoading(false);
-    //     toast("Details updated !");
-    //   },
-    //   (error) => {
-    //     setLoading(false);
-    //     toast("Server Error, Please try again!");
-    //   }
-    // );
+    try {
+      await axios.put((import.meta.env.VITE_API_URL ?? "") + "/api/cv/updateCV", { id: resumeId, education: educationalList });
+      enableNext(true);
+    } catch {
+      alert("Could not save education.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     setResumeInfo({
       ...resumeInfo,
-      education: educationalList,
+      education: educationalList.map((entry, index) => ({ id: index, ...entry })),
     });
   }, [educationalList]);
   return (

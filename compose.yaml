@@ -1,0 +1,30 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    mem_limit: 512m
+    ports:
+      - "127.0.0.1:${CV_PORT:-18086}:5000"
+    environment:
+      DATABASE_URL: postgresql://cv:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@db:5432/cv
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET}
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    mem_limit: 384m
+    environment:
+      POSTGRES_USER: cv
+      POSTGRES_DB: cv
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - cv-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "cv", "-d", "cv"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+volumes:
+  cv-data:

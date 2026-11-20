@@ -2,7 +2,7 @@
 
 import { ResumeInfoContext } from "@/context/ResumeInfoContext";
 import dummy from "@/data/dummy";
-import axios from "axios";
+import axios from "@/services/api";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import FormSection from "../FormSection";
@@ -49,24 +49,17 @@ const EditResume: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { resumeId } = useParams<{ resumeId: string }>();
 
-  console.log("resumeId in edit resume page: ", resumeId);
-  const [formData, setFormData] = useState({
-    personalDetails: "",
-    summary: "",
-    experience: "",
-    education: "",
-  });
   const [resumeInfo, setResumeInfo] = useState<ResumeInfo>(dummy);
 
   const GetResumeInfo = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/cv/${resumeId}`
+        `${import.meta.env.VITE_API_URL ?? ""}/api/cv/${resumeId}`
       );
-      console.log("response", response);
-      setFormData(response.data);
-      console.log("formData", formData);
+
+
+
       setResumeInfo(response.data); // Assuming the response matches ResumeInfo type
       setError(null);
     } catch (error) {
@@ -87,9 +80,10 @@ const EditResume: React.FC = () => {
   if (loading) {
     return <div>Loading...</div>;
   }
+  if (error) return <p role="alert">{error}</p>;
   const handleSaveResume = () => {
     axios
-      .put(`${import.meta.env.VITE_API_URL}/api/cv/${resumeId}`, formData)
+      .put(`${import.meta.env.VITE_API_URL ?? ""}/api/cv/${resumeId}`, resumeInfo)
       .then((response) => {
         alert("Resume saved successfully");
       })

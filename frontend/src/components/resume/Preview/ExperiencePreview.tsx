@@ -24,10 +24,7 @@ const ExperiencePreview = ({ resumeInfo }: { resumeInfo: any }) => {
               {experience?.currentlyWorking ? "Present" : experience?.endDate}
             </span>
           </h2>
-          <div
-            className="text-xs my-2"
-            dangerouslySetInnerHTML={{ __html: experience?.workSummary }}
-          ></div>
+          <div className="text-xs my-2 whitespace-pre-wrap">{experience?.workSummary?.replace(/<[^>]*>/g, " ")}</div>
         </div>
       ))}
     </div>

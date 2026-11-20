@@ -12,6 +12,6 @@ export class Skill {
   @Column()
   rating?: number;
 
-  @ManyToOne(() => CV, (cv) => cv.skills)
+  @ManyToOne(() => CV, (cv) => cv.skills, { onDelete: "CASCADE", orphanedRowAction: "delete" })
   cv?: CV;
 }

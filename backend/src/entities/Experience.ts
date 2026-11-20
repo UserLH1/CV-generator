@@ -30,6 +30,6 @@ export class Experience {
   @Column({ type: 'text' })
   workSummary?: string;
 
-  @ManyToOne(() => CV, (cv) => cv.experiences)
+  @ManyToOne(() => CV, (cv) => cv.experiences, { onDelete: "CASCADE", orphanedRowAction: "delete" })
   cv?: CV;
 }

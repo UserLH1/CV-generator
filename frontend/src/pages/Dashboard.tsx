@@ -1,31 +1,30 @@
 import AddResume from "@/components/AddResume";
 import ResumeCard from "@/components/resume/ResumeCard";
-import axios from "axios";
+import axios from "@/services/api";
 import { useEffect, useState } from "react";
 
 const Dashboard = () => {
-  const [resumes, setResumes] = useState([]);
+  const [resumes, setResumes] = useState<{ id: string; title?: string; themeColor?: string }[]>([]);
 
   const GetResumesList = () => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/api/cv/getCVs`, {
+      .get(`${import.meta.env.VITE_API_URL ?? ""}/api/cv/getCVs`, {
         params: {
           email: localStorage.getItem("user"),
         },
       })
       .then((response) => {
-        console.log(response);
+
         setResumes(response.data);
       })
       .catch((error) => {
-        console.log(error);
+
       });
   };
   useEffect(() => {
     GetResumesList();
 
   }, []);
-  console.log("resumes", resumes);
 
   return (
     <div className="p-6 md:p-10 lg:p-16 bg-gray-50 min-h-screen mt-28">
@@ -45,7 +44,7 @@ const Dashboard = () => {
         {resumes.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {resumes.map((resume, index) => (
-              <ResumeCard resume={resume} key={index} />
+              <ResumeCard resume={resume} key={index} refreshData={GetResumesList} />
             ))}
           </div>
         ) : (

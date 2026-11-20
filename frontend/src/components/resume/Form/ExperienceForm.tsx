@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import axios from "axios";
+import axios from "@/services/api";
 import { LoaderCircle } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -64,7 +64,7 @@ const ExperienceForm: React.FC<ExperienceFormProps> = ({ enableNext }) => {
   const onSave = async () => {
     setLoading(true);
     try {
-      await axios.put(`${import.meta.env.VITE_API_URL}/api/cv/updateCV`, {
+      await axios.put(`${import.meta.env.VITE_API_URL ?? ""}/api/cv/updateCV`, {
         id: resumeId,
         experience: experienceList,
       });

@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { getRepository } from 'typeorm';
+import database from '../data-source';
 import { User } from '../entities/User';
 
 export class AuthController {
@@ -9,12 +9,15 @@ export class AuthController {
   //register a new user
   async register(req: Request, res: Response): Promise<Response> {
     const { email, password, name } = req.body;
+    if (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+[.][^\s@]+$/.test(email) || typeof name !== 'string' || !name.trim() || typeof password !== 'string' || password.length < 8 || Buffer.byteLength(password) > 72) {
+      return res.status(400).json({ message: 'Enter a valid email, name and password of at least 8 characters' });
+    }
 
-    const userRepository = getRepository(User);
+    const userRepository = database.getRepository(User);
 
     try {
       // Check if user already exists
-      const existingUser = await userRepository.findOne({ where: { email } });
+      const existingUser = await userRepository.findOne({ where: { email: email.trim().toLowerCase() } });
       if (existingUser) {
         return res.status(400).json({ message: 'User already exists' });
       }
@@ -23,7 +26,7 @@ export class AuthController {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const newUser = userRepository.create({
-        email,
+        email: email.trim().toLowerCase(),
         password: hashedPassword,
         name
       });
@@ -41,14 +44,17 @@ export class AuthController {
   //login a user
    async login(req: Request, res: Response): Promise<Response> {
     const { email, password } = req.body;
+    if (typeof email !== 'string' || typeof password !== 'string' || Buffer.byteLength(password) > 72) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
 
-    const userRepository = getRepository(User);
+    const userRepository = database.getRepository(User);
 
     try {
       // Check if the user exists
-      const user = await userRepository.findOne({ where: { email } });
+      const user = await userRepository.findOne({ where: { email: email.trim().toLowerCase() } });
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(401).json({ message: 'Invalid credentials' });
       }
 
       // Compare the provided password with the stored hash
@@ -60,7 +66,7 @@ export class AuthController {
       // Generate a JWT token
       const token = jwt.sign(
         { id: user.id, email: user.email },
-        process.env.JWT_SECRET || 'your_jwt_secret',  // Use an environment variable for secret in production
+        process.env.JWT_SECRET!,  // Use an environment variable for secret in production
         { expiresIn: '1h' }
       );
 

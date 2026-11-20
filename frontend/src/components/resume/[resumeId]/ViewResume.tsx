@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ResumeInfoContext } from "@/context/ResumeInfoContext";
-import axios from "axios";
+import axios from "@/services/api";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { RWebShare } from "react-web-share";
+import PreviewSection from "../PreviewSection";
 
-import "./ViewResume.css"; // importul fișierului de CSS
+import "./ViewResume.css"; // importul fiÈ™ierului de CSS
 
 function ViewResume() {
   const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ function ViewResume() {
     const GetResumeInfo = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/cv/getCV/${resumeId}`
+          `${import.meta.env.VITE_API_URL ?? ""}/api/cv/getCV/${resumeId}`
         );
         setResumeInfo(response.data);
       } catch (error) {
@@ -35,7 +35,7 @@ function ViewResume() {
   // Log updated resumeInfo
   useEffect(() => {
     if (resumeInfo) {
-      console.log("Updated resumeInfo in view resume page", resumeInfo);
+
     }
   }, [resumeInfo]);
 
@@ -54,46 +54,25 @@ function ViewResume() {
 
   return (
     <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo }}>
-      {/* Această secțiune e ascunsă la print */}
+      {/* AceastÄƒ secÈ›iune e ascunsÄƒ la print */}
       <div id="no-print">
         <div className="my-10 mx-10 md:mx-20 lg:mx-36">
           <h2 className="text-center text-2xl font-medium">
-            Congrats! Your Ultimate AI Generated Resume is Ready!
+            Your resume
           </h2>
           <p className="text-center text-gray-400">
-            Now you are ready to download your resume and share the unique URL
-            with your friends and family.
+            Download a copy of your resume to share.
           </p>
           <div className="flex justify-between px-44 my-10">
             <Button onClick={HandleDownload}>Download</Button>
-            <RWebShare
-              data={{
-                text: "Hello Everyone, This is my resume. Please open the URL to see it.",
-                url: `${
-                  import.meta.env.VITE_BASE_URL
-                }/my-resume/${resumeId}/view`,
-                title: `${resumeInfo?.firstName || ""} ${
-                  resumeInfo?.lastName || ""
-                }'s Resume`,
-              }}
-              onClick={() => console.log("Shared successfully!")}
-            >
-              <Button>Share</Button>
-            </RWebShare>
           </div>
         </div>
       </div>
 
-      {/* Această secțiune rămâne vizibilă și la print */}
+      {/* AceastÄƒ secÈ›iune rÄƒmÃ¢ne vizibilÄƒ È™i la print */}
       <div className="my-10 mx-10 md:mx-20 lg:mx-36">
         <div id="print-area">
-          <p className="text-center text-gray-400">
-            Resume preview is currently disabled.
-          </p>
-          {/* 
-            Aici poți include preview-ul real al CV-ului, 
-            ex. <ResumePreview /> sau alt component ce afișează conținutul.
-          */}
+          <PreviewSection />
         </div>
       </div>
     </ResumeInfoContext.Provider>

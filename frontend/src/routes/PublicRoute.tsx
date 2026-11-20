@@ -9,7 +9,6 @@ interface PublicRouteProps {
 const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  console.log("token from public: ", user);
   useEffect(() => {
     if (user) {
       navigate("/dashboard");

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { LayoutGrid } from 'lucide-react'
 import { ResumeInfoContext } from '@/context/ResumeInfoContext'
 import { useParams } from 'react-router-dom'
-import axios from 'axios'
+import axios from '@/services/api'
 function ThemeColor() {
     const colors=[
         "#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#A133FF",
@@ -17,21 +17,17 @@ function ThemeColor() {
         "#5733FF", "#33FF5A", "#5A33FF", "#FF335A", "#335AFF"
     ]
 
-    const {resumeInfo,setResumeInfo}=useContext(ResumeInfoContext);
-    const [selectedColor,setSelectedColor]=useState();
+    const {resumeInfo,setResumeInfo}=useContext(ResumeInfoContext)!;
+    const [selectedColor,setSelectedColor]=useState(resumeInfo?.themeColor);
   const { resumeId } = useParams<{ resumeId: string }>();
-    const onColorSelect=(color)=>{
+    const onColorSelect=(color: string)=>{
         setSelectedColor(color)
         setResumeInfo({
             ...resumeInfo,
             themeColor:color
         });
-        const data={
-            data:{
-                themeColor:color
-            }
-        }
-        axios.put(`${import.meta.env.VITE_API_URL}/api/cv/updateCV/${resumeId}`,data)
+        axios.put((import.meta.env.VITE_API_URL ?? "") + "/api/cv/updateCV/" + resumeId, { themeColor: color })
+          .catch(() => alert("Could not save theme color."));
 
     }
 
