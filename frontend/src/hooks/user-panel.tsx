@@ -23,10 +23,10 @@ export default function UserPanel({ username = '', avatarUrl, onLogout }: UserPa
   }
 
   return (
-    <div className="absolute top-4 right-4">
+    <div className="shrink-0">
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
-          <Button variant="ghost" className="h-10 w-10 rounded-full">
+          <Button variant="ghost" className="h-10 w-10 rounded-full" aria-label="Account menu">
             <Avatar>
               <AvatarImage src={avatarUrl} alt={username} />
               <AvatarFallback>{username ? username.charAt(0).toUpperCase() : 'U'}</AvatarFallback>

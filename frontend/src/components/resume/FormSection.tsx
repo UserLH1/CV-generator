@@ -25,7 +25,7 @@ const FormSection = () => {
         <div className="flex gap-2">
           {activeFormIndex > 1 && (
             <Button
-              className="flex gap-2 text-white border rounded"
+              className="flex gap-2 text-primary-foreground border rounded"
               size="sm"
               onClick={() => setActiveFormIndex((prevIndex) => prevIndex - 1)}
             >
@@ -36,7 +36,7 @@ const FormSection = () => {
           {activeFormIndex < 6 && (
             <Button
               disabled={!enableNext}
-              className="flex gap-2 text-white border rounded"
+              className="flex gap-2 text-primary-foreground border rounded"
               size="sm"
               onClick={() => setActiveFormIndex((prevIndex) => prevIndex + 1)}
             >

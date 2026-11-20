@@ -48,7 +48,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
     }
   };
   return (
-    <div className="p-5 shadow-lg rounded-lg border-t-primary border-t-4 mt-10">
+    <div className="mt-6 rounded-lg border border-t-4 border-t-primary bg-card p-5 shadow-sm">
       <h2 className="font-bold text-lg">Personal Detail</h2>
       <p>Get Started with the basic information</p>
       <form onSubmit={onSave}>
@@ -57,7 +57,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
             <label className="text-sm">First Name:</label>
             <Input
               name="firstName"
-              className="border-gray-300 rounded"
+              className="border-input rounded"
               required
               onChange={handleChange}
               defaultValue={resumeInfo.firstName}
@@ -67,7 +67,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
             <label className="text-sm">Last Name:</label>
             <Input
               name="lastName"
-              className="border-gray-300 rounded"
+              className="border-input rounded"
               required
               onChange={handleChange}
               defaultValue={resumeInfo.lastName}
@@ -77,7 +77,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
             <label className="text-sm">Job Title:</label>
             <Input
               name="jobTitle"
-              className="border-gray-300 rounded"
+              className="border-input rounded"
               required
               onChange={handleChange}
               defaultValue={resumeInfo.jobTitle}
@@ -87,7 +87,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
             <label className="text-sm">Address:</label>
             <Input
               name="address"
-              className="border-gray-300 rounded"
+              className="border-input rounded"
               required
               onChange={handleChange}
               defaultValue={resumeInfo.address}
@@ -99,7 +99,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
             <Input
               type="tel"
               name="phone"
-              className="border-gray-300 rounded"
+              className="border-input rounded"
               required
               onChange={handleChange}
               defaultValue={resumeInfo.phone}
@@ -110,7 +110,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
             <Input
               type="email"
               name="email"
-              className="border-gray-300 rounded"
+              className="border-input rounded"
               required
               onChange={handleChange}
               defaultValue={resumeInfo.email}
@@ -119,7 +119,7 @@ const PersonalDetails: React.FC<PersonalDetailsProps> = ({ enableNext }) => {
         </div>
         <div className="flex justify-end">
           <Button
-            className="flex justify-end text-white border rounded mt-3"
+            className="flex justify-end text-primary-foreground border rounded mt-3"
             type="submit"
             disabled={loading}
           >

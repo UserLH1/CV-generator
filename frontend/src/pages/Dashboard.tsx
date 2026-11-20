@@ -3,61 +3,57 @@ import ResumeCard from "@/components/resume/ResumeCard";
 import axios from "@/services/api";
 import { useEffect, useState } from "react";
 
-const Dashboard = () => {
-  const [resumes, setResumes] = useState<{ id: string; title?: string; themeColor?: string }[]>([]);
+type Resume = { id: string; title?: string; themeColor?: string };
 
-  const GetResumesList = () => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL ?? ""}/api/cv/getCVs`, {
-        params: {
-          email: localStorage.getItem("user"),
-        },
-      })
-      .then((response) => {
+export default function Dashboard() {
+  const [resumes, setResumes] = useState<Resume[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-        setResumes(response.data);
-      })
-      .catch((error) => {
+  async function loadResumes() {
+    setError(false);
+    try {
+      const response = await axios.get<Resume[]>((import.meta.env.VITE_API_URL ?? "") + "/api/cv/getCVs");
+      setResumes(response.data);
+    } catch {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }
 
-      });
-  };
   useEffect(() => {
-    GetResumesList();
-
+    void loadResumes();
   }, []);
 
   return (
-    <div className="p-6 md:p-10 lg:p-16 bg-gray-50 min-h-screen mt-28">
-      <header className="mb-8">
-        <h2 className="text-4xl font-bold text-gray-800">Dashboard</h2>
-        <p className="text-lg text-gray-600 mt-2">
-          Welcome back, {localStorage.getItem("user") || "User"}!
-        </p>
+    <div className="mx-auto max-w-screen-xl px-5 py-8 sm:px-10 sm:py-12">
+      <header className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b pb-6">
+        <div>
+          <h1 className="font-serif text-4xl tracking-tight text-primary sm:text-5xl">Your CVs</h1>
+          <p className="mt-2 text-muted-foreground">Pick up a draft or start a CV for your next application.</p>
+        </div>
+        <AddResume />
       </header>
 
-      <section className="bg-white rounded-lg shadow p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-semibold text-gray-800">Your Resumes</h3>
-          <AddResume />
-        </div>
-
-        {resumes.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {resumes.map((resume, index) => (
-              <ResumeCard resume={resume} key={index} refreshData={GetResumesList} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-20">
-            <p className="text-gray-500 text-lg">You have no resumes yet.</p>
-            <div className="mt-6">
-              <AddResume />
-            </div>
-          </div>
-        )}
-      </section>
+      {loading ? (
+        <p role="status" className="text-muted-foreground">Loading your CVs…</p>
+      ) : error ? (
+        <p role="alert" className="text-destructive">Could not load your CVs. <button type="button" className="underline" onClick={() => void loadResumes()}>Try again</button></p>
+      ) : resumes.length ? (
+        <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {resumes.map((resume) => (
+            <li key={resume.id}>
+              <ResumeCard resume={resume} refreshData={loadResumes} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <section className="rounded-lg border bg-card px-6 py-12 text-center">
+          <h2 className="font-serif text-2xl text-primary">Your first CV starts here</h2>
+          <p className="mt-2 text-muted-foreground">Give your draft a title, then add your experience.</p>
+        </section>
+      )}
     </div>
   );
-};
-
-export default Dashboard;
+}

@@ -16,39 +16,30 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
+    --brand-forest: #17392d;
+    --brand-paper: #f5f0e7;
+    --brand-terracotta: #a74731;
+    --background: 39 41% 93%;
+    --foreground: 48 8% 12%;
+    --card: 39 100% 98%;
     --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
+    --popover: 39 100% 98%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
+    --primary: 158.8 42.5% 15.7%;
+    --primary-foreground: 39 41% 93%;
+    --secondary: 40 31% 88%;
     --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    --muted: 40 31% 88%;
+    --muted-foreground: 46 7% 34%;
+    --accent: 33 50% 90%;
+    --accent-foreground: 12 55% 31%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
+    --border: 42 23% 79%;
+    --input: 42 23% 79%;
+    --ring: 159 42% 16%;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;

@@ -75,7 +75,7 @@ const SkillsForm: React.FC<{ enableNext: (value: boolean) => void }> = ({ enable
   };
 
   return (
-    <div className="p-5 shadow-lg rounded-lg border-t-primary border-t-4 mt-10">
+    <div className="mt-6 rounded-lg border border-t-4 border-t-primary bg-card p-5 shadow-sm">
       <h2 className="font-bold text-lg">Skills</h2>
       <p>Add Your top professional key skills</p>
 

@@ -1,139 +1,99 @@
-import { Loader2Icon, MoreVertical, Notebook } from 'lucide-react'
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import cvImage from "../../assets/cv.png"
-function ResumeCardItem({resume,refreshData}: {resume: { id: string; title?: string; themeColor?: string }; refreshData: () => void }) {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { defaultResumeAccent } from "@/data/resume-theme";
+import axios from "@/services/api";
+import { FileText, MoreHorizontal } from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
-  const navigation=useNavigate();
-  const [openAlert,setOpenAlert]=useState(false);
-  const [loading,setLoading]=useState(false);
-  // const onMenuClick=(url)=>{
-  //   navigation(url)
-  // }
+type ResumeCardProps = {
+  resume: { id: string; title?: string; themeColor?: string };
+  refreshData: () => void;
+};
 
+export default function ResumeCard({ resume, refreshData }: ResumeCardProps) {
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [error, setError] = useState(false);
+  const resumePath = "/dashboard/resume/" + resume.id;
+  const title = resume.title || "Untitled CV";
 
-  const onDelete=()=>{
-    setLoading(true);
-    fetch(`${import.meta.env.VITE_API_URL ?? ""}/api/cv/deleteCV/${resume.id}`,{
-      method:'DELETE',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':`Bearer ${localStorage.getItem('token')}`
-
-  }}).then(res=>res.json())
-  .then(data=>{
-    if(data.success){
+  async function deleteResume() {
+    setDeleting(true);
+    setError(false);
+    try {
+      await axios.delete((import.meta.env.VITE_API_URL ?? "") + "/api/cv/deleteCV/" + resume.id);
+      setConfirmingDelete(false);
       refreshData();
-      setOpenAlert(false);
-      setLoading(false);
+    } catch {
+      setError(true);
+    } finally {
+      setDeleting(false);
     }
-  }).catch(err=>{
-    setLoading(false);
-  })
   }
 
   return (
-    <div className="">
-      <Link to={`/dashboard/resume/${resume.id}/edit`}>
-        <div
-          className="p-14  bg-gradient-to-b
-          from-pink-100 via-purple-200 to-blue-200
-        h-[280px] 
-          rounded-t-lg border-t-4
-        "
-          style={{
-            borderColor: resume?.themeColor,
-          }}
-        >
-          <div
-            className="flex 
-        items-center justify-center h-[180px] "
-          >
-            {/* <Notebook/> */}
-            <img src={cvImage} width={80} height={80} />
-          </div>
-        </div>
-      </Link>
-      <div
-        className="border p-3 flex justify-between  text-white rounded-b-lg shadow-lg"
-        style={{
-          background: resume?.themeColor,
-        }}
+    <article className="overflow-hidden rounded-lg border bg-card shadow-sm">
+      <Link
+        to={resumePath + "/edit"}
+        aria-label={"Edit " + title}
+        className="grid min-h-36 place-items-center border-b bg-secondary p-5 hover:bg-accent focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
       >
-        <h2 className="text-sm">{resume.title}</h2>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <MoreVertical className="h-4 w-4 cursor-pointer" />
+        <span
+          className="grid h-24 w-[4.5rem] place-items-center rounded-sm border border-t-4 bg-card text-primary shadow-sm"
+          style={{ borderTopColor: resume.themeColor || defaultResumeAccent }}
+        >
+          <FileText size={24} aria-hidden="true" />
+        </span>
+      </Link>
+      <div className="flex min-h-14 items-center justify-between gap-2 py-2 pl-4 pr-2">
+        <h2 className="truncate font-medium text-primary" title={title}>{title}</h2>
+        <DropdownMenu modal={false}>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" aria-label={"Actions for " + title}>
+              <MoreHorizontal size={18} aria-hidden="true" />
+            </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem
-              onClick={() =>
-                navigation("/dashboard/resume/" + resume.id + "/edit")
-              }
-            >
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() =>
-                navigation("/dashboard/resume/" + resume.id + "/view")
-              }
-            >
-              View
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() =>
-                navigation("/dashboard/resume/" + resume.id + "/view")
-              }
-            >
-              Download
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setOpenAlert(true)}>
-              Delete
-            </DropdownMenuItem>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem asChild><Link to={resumePath + "/edit"}>Edit</Link></DropdownMenuItem>
+            <DropdownMenuItem asChild><Link to={resumePath + "/view"}>View and download</Link></DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => setConfirmingDelete(true)}>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-
-        <AlertDialog open={openAlert}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This permanently deletes this resume.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setOpenAlert(false)}>
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction onClick={onDelete} disabled={loading}>
-                {loading ? <Loader2Icon className="animate-spin" /> : "Delete"}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </div>
-    </div>
+
+      <AlertDialog open={confirmingDelete} onOpenChange={(open) => {
+        if (!deleting) {
+          setConfirmingDelete(open);
+          if (open) setError(false);
+        }
+      }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this CV?</AlertDialogTitle>
+            <AlertDialogDescription>This permanently deletes {title} from your account.</AlertDialogDescription>
+          </AlertDialogHeader>
+          {error && <p role="alert" className="text-sm text-destructive">Could not delete this CV.</p>}
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={deleting}
+              onClick={(event) => {
+                event.preventDefault();
+                void deleteResume();
+              }}
+            >
+              {deleting ? "Deleting…" : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </article>
   );
 }
-
-export default ResumeCardItem

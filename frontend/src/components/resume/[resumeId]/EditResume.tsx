@@ -94,7 +94,7 @@ const EditResume: React.FC = () => {
 
   return (
     <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo }}>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 sm:gap-10 sm:p-10">
+      <div className="mx-auto grid max-w-screen-2xl grid-cols-1 items-start gap-6 p-4 sm:gap-10 sm:p-10 md:grid-cols-2">
         <FormSection />
         <PreviewSection />
         <button onClick={handleSaveResume}>Save Resume</button>{" "}

@@ -43,7 +43,7 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ enableNext }) => {
   return (
     <div>
       {" "}
-      <div className="p-5 shadow-lg rounded-lg border-t-primary border-t-4 mt-10">
+      <div className="mt-6 rounded-lg border border-t-4 border-t-primary bg-card p-5 shadow-sm">
         <h2 className="font-bold text-lg">Summary</h2>
         <p>Add summary for your job title </p>
 
@@ -52,14 +52,14 @@ const SummaryForm: React.FC<SummaryFormProps> = ({ enableNext }) => {
             <label>Add Summary</label>
           </div>
           <Textarea
-            className="border-gray-300 rounded mt-5"
+            className="border-input rounded mt-5"
             value={resumeInfo.summary ?? ""}
             required
             onChange={handleChange}
           />
           <div className="mt-5 flex justify-end">
             <Button
-              className="flex justify-end text-white border rounded mt-3"
+              className="flex justify-end text-primary-foreground border rounded mt-3"
               type="submit"
               disabled={loading}
             >
