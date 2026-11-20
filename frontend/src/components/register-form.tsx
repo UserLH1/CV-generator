@@ -1,4 +1,5 @@
 import { AuthLayout } from "@/auth/AuthLayout";
+import { PasswordInput } from "@/auth/PasswordInput";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,7 +36,7 @@ export function RegisterFormComponent() {
   }
 
   return (
-    <AuthLayout title="Create an account" description="Save your first draft and return to it whenever you need.">
+    <AuthLayout mode="register" title="Create an account" description="Save your first draft and return to it whenever you need.">
       <form noValidate className="space-y-4" onSubmit={handleSubmit(createAccount)}>
         <div className="space-y-2">
           <Label htmlFor="register-name">Full name</Label>
@@ -49,7 +50,7 @@ export function RegisterFormComponent() {
         </div>
         <div className="space-y-2">
           <Label htmlFor="register-password">Password</Label>
-          <Input id="register-password" type="password" autoComplete="new-password" aria-invalid={!!errors.password} aria-describedby="register-password-hint" {...register("password")} />
+          <PasswordInput id="register-password" autoComplete="new-password" aria-invalid={!!errors.password} aria-describedby="register-password-hint" {...register("password")} />
           <p id="register-password-hint" role={errors.password ? "alert" : undefined} className={errors.password ? "text-sm text-destructive" : "text-sm text-muted-foreground"}>
             {errors.password?.message || "Use at least 8 characters."}
           </p>

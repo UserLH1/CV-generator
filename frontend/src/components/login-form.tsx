@@ -1,4 +1,5 @@
 import { AuthLayout } from "@/auth/AuthLayout";
+import { PasswordInput } from "@/auth/PasswordInput";
 import { useAuth } from "@/auth/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,7 +42,7 @@ export function LoginForm() {
   }
 
   return (
-    <AuthLayout title="Sign in" description="Pick up your CV where you left off.">
+    <AuthLayout mode="login" title="Sign in" description="Pick up your CV where you left off.">
       {registeredEmail && <p role="status" className="mb-4 rounded border border-primary/25 bg-primary/5 px-3 py-2 text-sm text-primary">Your account is ready. Sign in to create your CV.</p>}
       <form noValidate className="space-y-4" onSubmit={handleSubmit(signIn)}>
         <div className="space-y-2">
@@ -51,7 +52,7 @@ export function LoginForm() {
         </div>
         <div className="space-y-2">
           <Label htmlFor="login-password">Password</Label>
-          <Input id="login-password" type="password" autoComplete="current-password" aria-invalid={!!errors.password} aria-describedby={errors.password ? "login-password-error" : undefined} {...register("password")} />
+          <PasswordInput id="login-password" autoComplete="current-password" aria-invalid={!!errors.password} aria-describedby={errors.password ? "login-password-error" : undefined} {...register("password")} />
           {errors.password && <p id="login-password-error" role="alert" className="text-sm text-destructive">{errors.password.message}</p>}
         </div>
         {errors.root?.message && <p role="alert" className="text-sm text-destructive">{errors.root.message}</p>}
